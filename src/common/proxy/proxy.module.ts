@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TimeOffProxy } from './timeoff-proxy';
+import { ClientProxyProxyTimeOff } from './client-proxy-timeoff';
 
 @Module({
-  providers: [TimeOffProxy],
-  exports: [TimeOffProxy]
+  providers: [ClientProxyProxyTimeOff],
+  exports: [ClientProxyProxyTimeOff]
 })
 export class proxyModule {}
