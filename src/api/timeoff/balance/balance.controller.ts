@@ -13,8 +13,8 @@ export class BalanceController {
   private clientProxyBalance = this.clientProxy.clientProxyBalance();
 
   @Post()
-  create(@Body() createBalanceDto: CreateBalanceDto) {
-    return '';
+  create(@Body() createBalanceDto: CreateBalanceDto): Observable<Balance> {
+    return this.clientProxyBalance.send(BalanceMSG.CREATE, createBalanceDto);
   }
 
   @Get()
@@ -24,7 +24,7 @@ export class BalanceController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return '';
+    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
   }
 
   @Patch(':id')

@@ -4,10 +4,10 @@ export class UpdateBalanceDto {
   @IsOptional()
   @IsInt()
   @Min(0)
-  comp_days: number;
+  compDays: number;
 
   @IsOptional()
   @IsInt()
   @Min(0)
-  vacation_days: number;
+  vacationDays: number;
 }
