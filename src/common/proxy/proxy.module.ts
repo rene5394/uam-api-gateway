@@ -5,4 +5,4 @@ import { ClientProxyProxyTimeOff } from './client-proxy-timeoff';
   providers: [ClientProxyProxyTimeOff],
   exports: [ClientProxyProxyTimeOff]
 })
-export class proxyModule {}
+export class ProxyModule {}
