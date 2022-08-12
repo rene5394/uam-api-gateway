@@ -1,4 +1,3 @@
 export enum RabbitMQ {
-  BalanceQueue = 'balances',
-  BalaceTransactionQueue = 'balancetransaction'
+  BalanceQueue = 'balance'
 }
