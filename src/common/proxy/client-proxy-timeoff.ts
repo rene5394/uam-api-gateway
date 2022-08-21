@@ -12,7 +12,7 @@ export class ClientProxyProxyTimeOff  {
       transport: Transport.RMQ,
       options: {
           urls: this.configService.get('AMQP_URL'),
-          queue: RabbitMQ.BalanceQueue
+          queue: RabbitMQ.TimeOffBalanceQueue
       }
     })
   }
