@@ -1,6 +1,6 @@
-export enum EntrieMSG {
-    CREATE = 'createEntrie',
-    FIND_ALL = 'findAllEntrie',
-    FIND_ONE = 'findOneEntrie',
-    UPDATE = 'updateEntrie',
+export enum EntryMSG {
+    CREATE = 'createEntry',
+    FIND_ALL = 'findAllEntry',
+    FIND_ONE = 'findOneEntry',
+    UPDATE = 'updateEntry',
 }
