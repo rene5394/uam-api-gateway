@@ -4,7 +4,7 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { RabbitMQ } from '../constants/rabbitmq';
 
 @Injectable()
-export class ClientProxyProxyTimeOff  {
+export class ClientProxyTimeOff  {
   constructor(private readonly configService: ConfigService) {}
 
   clientProxyBalance(): ClientProxy {
