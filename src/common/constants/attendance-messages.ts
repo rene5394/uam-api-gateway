@@ -4,3 +4,10 @@ export enum EntryMSG {
     FIND_ONE = 'findOneEntry',
     UPDATE = 'updateEntry',
 }
+
+export enum StatusMSG {
+    CREATE = 'createStatus',
+    FIND_ALL = 'findAllStatus',
+    FIND_ONE = 'findOneStatus',
+    UPDATE = 'updateStatus',
+}
