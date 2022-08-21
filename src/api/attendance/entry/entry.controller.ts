@@ -28,7 +28,7 @@ export class EntryController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEntryDto: UpdateEntryDto) {
-    return '';
+    return this.clientProxyEntry.send(EntryMSG.UPDATE, { id, updateEntryDto });
   }
 
   @Delete(':id')
