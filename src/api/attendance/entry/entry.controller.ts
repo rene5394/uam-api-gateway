@@ -13,7 +13,7 @@ export class EntryController {
 
   @Post()
   create(@Body() createEntryDto: CreateEntryDto) {
-    return '';
+    return this.clientProxyEntry.send(EntryMSG.CREATE, createEntryDto);
   }
 
   @Get()
