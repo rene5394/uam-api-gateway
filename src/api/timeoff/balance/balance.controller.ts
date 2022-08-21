@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { BalanceMSG } from 'src/common/constants/time-off-messages';
-import { ClientProxyProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
 
 @Controller('v1/timeoff/balances')
 export class BalanceController {
-  constructor(private readonly clientProxy: ClientProxyProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
 
   private clientProxyBalance = this.clientProxy.clientProxyBalance();
 
