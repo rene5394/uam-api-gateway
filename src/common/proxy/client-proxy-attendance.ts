@@ -14,6 +14,16 @@ export class ClientProxyAttendance  {
           urls: this.configService.get('AMQP_URL'),
           queue: RabbitMQ.AttendanceEntryQueue
       }
-    })
+    });
+  }
+
+  clientProxyStatus(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.AttendanceStatusQueue
+      }
+    });
   }
 }
