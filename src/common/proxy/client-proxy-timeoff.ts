@@ -14,6 +14,6 @@ export class ClientProxyTimeOff  {
           urls: this.configService.get('AMQP_URL'),
           queue: RabbitMQ.TimeOffBalanceQueue
       }
-    })
+    });
   }
 }
