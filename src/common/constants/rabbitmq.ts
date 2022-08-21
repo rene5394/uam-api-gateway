@@ -1,3 +1,6 @@
 export enum RabbitMQ {
-  BalanceQueue = 'balance'
+  // TimeOff Queues
+  TimeOffBalanceQueue = 'timeoffBalance',
+  // Attendance Queues
+  AttendanceEntrieQueue = 'attendanceEntrie'
 }
