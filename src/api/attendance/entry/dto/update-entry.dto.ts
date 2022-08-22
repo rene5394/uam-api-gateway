@@ -1,7 +1,7 @@
-import { IsDateString, IsInt, IsOptional, Length, Max, Min } from "@nestjs/class-validator";
+import { IsDateString, IsInt, IsOptional, MaxLength, Max, MinLength, Min } from "@nestjs/class-validator";
 export class UpdateEntryDto {
   @IsOptional()
-  @Length(100)
+  @MaxLength(100)
   comment: string;
 
   @IsOptional()
