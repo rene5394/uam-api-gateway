@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { BalanceModule } from './api/timeoff/balance/balance.module';
 import { ConfigModule } from '@nestjs/config';
 import { EntrieModule } from './api/attendance/entry/entry.module';
 import { StatusModule } from './api/attendance/status/status.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './auth/users/users.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -13,8 +14,9 @@ import { StatusModule } from './api/attendance/status/status.module';
   }),
   BalanceModule,
   EntrieModule,
-  StatusModule],
-  controllers: [AppController],
-  providers: [AppService],
+  StatusModule,
+  AuthModule,
+  UsersModule],
+  controllers: [AppController]
 })
 export class AppModule {}
