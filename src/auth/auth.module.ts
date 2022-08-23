@@ -14,7 +14,7 @@ import { Auth } from './entities/auth.entity';
     PassportModule,
     JwtModule.register({
       secret: String(process.env.JWT_SECRET),
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '12h' },
     }),
   ],
   controllers: [AuthController],
