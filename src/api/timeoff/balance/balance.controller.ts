@@ -1,5 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../auth/guards/roles.guard';
+import { Roles } from '../../../common/decorators/role.decorator';
+import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
 import { BalanceMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
@@ -7,7 +10,7 @@ import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balances')
 export class BalanceController {
   constructor(private readonly clientProxy: ClientProxyTimeOff) {}
@@ -24,6 +27,7 @@ export class BalanceController {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ALL, '');
   }
 
+  @Roles(Role.va)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
