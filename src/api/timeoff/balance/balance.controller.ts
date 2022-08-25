@@ -34,6 +34,12 @@ export class BalanceController {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
   }
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('user/me')
+  findOneByUserJWT(@Auth() auth) {
+    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, auth.userId);
+  }
+
   @Roles(Role.admin)
   @Get('/user/:userId')
   findOneByUserId(@Param('userId') userId: string) {
