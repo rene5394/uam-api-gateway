@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
@@ -27,10 +28,16 @@ export class BalanceController {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ALL, '');
   }
 
-  @Roles(Role.va)
+  @Roles(Role.admin)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
+  }
+
+  @Roles(Role.admin)
+  @Get('/user/:userId')
+  findOneByUserId(@Param('userId') userId: string) {
+    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, userId);
   }
 
   @Patch(':id')
