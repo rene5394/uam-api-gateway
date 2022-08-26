@@ -1,4 +1,5 @@
-import {  Column, Entity, PrimaryColumn } from 'typeorm';
+import {  Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import { Image } from './image.entity';
 
 @Entity('users')
 export class User {
@@ -29,6 +30,12 @@ export class User {
     @Column({ type: 'int', nullable: false })
     role_id: number;
 
+    @Column({ type: 'int', nullable: false })
+    status_id: number;
+
     @Column({ type: 'tinyint', nullable: false })
     hr: number;
+
+    @OneToOne(() => Image)
+    image: Image[]
 }
