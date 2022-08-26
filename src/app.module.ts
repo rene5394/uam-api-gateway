@@ -6,6 +6,7 @@ import { EntrieModule } from './api/attendance/entry/entry.module';
 import { StatusModule } from './api/attendance/status/status.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './api/team/user/user.module';
+import { TeamModule } from './api/team/team/team.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -27,6 +28,7 @@ import { UserModule } from './api/team/user/user.module';
   EntrieModule,
   StatusModule,
   AuthModule,
-  UserModule]
+  UserModule,
+  TeamModule]
 })
 export class AppModule {}
