@@ -16,4 +16,14 @@ export class ClientProxyTeam  {
       }
     });
   }
+
+  clientProxyTeam(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.TeamTeamQueue
+      }
+    });
+  }
 }
