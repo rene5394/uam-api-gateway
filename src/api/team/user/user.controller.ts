@@ -28,7 +28,7 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.clientProxyUser.send(UserMSG.FIND_ONE, id);
   }
 }
