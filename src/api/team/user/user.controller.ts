@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -14,6 +14,13 @@ export class UserController {
   constructor(private readonly clientProxy: ClientProxyTeam) {}
 
   private clientProxyUser = this.clientProxy.clientProxyUser();
+
+  @Get()
+  findAll(@Query('status') statusQuery)  {
+    const status = (statusQuery) ? statusQuery : '';
+
+    return this.clientProxyUser.send(UserMSG.FIND_ALL, status);
+  }
 
   @Get('/me')
   findOneByUserJWT(@Auth() auth) {
