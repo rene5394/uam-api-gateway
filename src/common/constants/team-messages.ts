@@ -1,4 +1,9 @@
 export enum UserMSG {
-    FIND_ALL =  'findAllUser',
-    FIND_ONE = 'findOneUser'
+  FIND_ALL =  'findAllUser',
+  FIND_ONE = 'findOneUser'
+}
+
+export enum TeamMSG {
+  FIND_ALL = 'findAllTeam',
+  FIND_ONE = 'findOneTeam'
 }
