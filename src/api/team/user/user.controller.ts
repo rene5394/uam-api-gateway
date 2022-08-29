@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -8,6 +9,7 @@ import { Observable } from 'rxjs';
 import { UserMSG } from 'src/common/constants/team-messages';
 import { ClientProxyTeam } from 'src/common/proxy/client-proxy-team';
 
+@ApiTags('Users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/team/users')
 export class UserController {

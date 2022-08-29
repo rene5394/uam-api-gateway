@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { StatusMSG } from 'src/common/constants/attendance-messages';
 import { ClientProxyAttendance } from 'src/common/proxy/client-proxy-attendance';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 
+@ApiTags('Attendance Statuses')
 @Controller('v1/attendance/status')
 export class StatusController {
   constructor(private readonly clientProxy: ClientProxyAttendance) {}

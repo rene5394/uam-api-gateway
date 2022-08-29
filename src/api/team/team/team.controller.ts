@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -7,6 +8,7 @@ import { Role } from '../../../common/enums/role.enum';
 import { TeamMSG } from 'src/common/constants/team-messages';
 import { ClientProxyTeam } from 'src/common/proxy/client-proxy-team';
 
+@ApiTags('Teams')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/team/teams')
 export class TeamController {
