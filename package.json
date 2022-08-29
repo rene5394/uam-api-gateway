@@ -29,7 +29,7 @@
     "@nestjs/microservices": "^9.0.8",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
-    "@nestjs/swagger": "^6.0.5",
+    "@nestjs/swagger": "^6.1.0",
     "@nestjs/typeorm": "^9.0.1",
     "amqp-connection-manager": "^4.1.5",
     "amqplib": "^0.10.2",
