@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TimeOutInterceptor } from './common/interceptors/timeout.interceptor';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,7 @@ async function bootstrap() {
     whitelist: true
   }));
   app.useGlobalInterceptors(new TimeOutInterceptor);
+  app.use(cookieParser());
   await app.listen(process.env.PORT || 8080);
 }
 bootstrap();
