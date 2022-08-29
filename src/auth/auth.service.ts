@@ -30,19 +30,17 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: any): Promise<string> {
     const payload = {
-      id: user.id,
+      userId: user.id,
       email: user.email,
       roleId: user.role_id,
       hr: user.hr
     };
 
-    return {
-      accessToken: this.jwtService.sign(payload, { 
-        secret: process.env.JWT_SECRET,
-        algorithm: 'HS256'
-      }),
-    };
+    return this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+      algorithm: 'HS256'
+    });
   }
 }
