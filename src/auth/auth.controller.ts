@@ -1,4 +1,4 @@
-import { Controller, Request, Response, Post, UseGuards } from '@nestjs/common';
+import { Controller, Request, Response, Post, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 
@@ -9,9 +9,19 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req, @Response() res) {
-    let token = await this.authService.login(req.user);
+    const origin = req.headers.origin;
+    const corsOrigins = process.env.CORS_DOMAIN.split(' ');
+    const jwt = await this.authService.login(req.user);
+
+    if (!corsOrigins.includes(origin)) {
+      throw new UnauthorizedException();
+    }
     
-    res.cookie('timeoff-auth-cookie', token, { httpOnly: true });
+    res.header("Access-Control-Allow-Origin", origin);  
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.header("Access-Control-Allow-Credentials", true);
+    res.cookie('timeoff-auth-cookie', jwt, { httpOnly: true });
     res.status(200).send();
   }
 }
