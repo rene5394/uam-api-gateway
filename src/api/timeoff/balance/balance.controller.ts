@@ -20,11 +20,13 @@ export class BalanceController {
 
   private clientProxyBalance = this.clientProxy.clientProxyBalance();
 
+  @Roles(Role.admin)
   @Post()
   create(@Body() createBalanceDto: CreateBalanceDto): Observable<Balance> {
     return this.clientProxyBalance.send(BalanceMSG.CREATE, createBalanceDto);
   }
 
+  @Roles(Role.admin)
   @Get()
   findAll(): Observable<Balance[]> {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ALL, '');
@@ -32,19 +34,19 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Observable<Balance> {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/me')
-  findOneByUserJWT(@Auth() auth) {
+  findOneByUserJWT(@Auth() auth): Observable<Balance> {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, auth.userId);
   }
 
   @Roles(Role.admin)
   @Get('/user/:userId')
-  findOneByUserId(@Param('userId') userId: string) {
+  findOneByUserId(@Param('userId') userId: string): Observable<Balance> {
     return this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, userId);
   }
 
