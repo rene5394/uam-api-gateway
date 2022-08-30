@@ -19,23 +19,8 @@ export class BalanceTransactionController {
     return this.balanceTransactionService.create(createBalanceTransactionDto);
   }
 
-  @Get()
-  findAll() {
-    return this.balanceTransactionService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.balanceTransactionService.findOne(+id);
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBalanceTransactionDto: UpdateBalanceTransactionDto) {
     return this.balanceTransactionService.update(+id, updateBalanceTransactionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.balanceTransactionService.remove(+id);
   }
 }
