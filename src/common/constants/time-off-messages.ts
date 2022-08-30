@@ -8,5 +8,7 @@ export enum BalanceMSG {
 
 export enum BalanceTransactionMSG {
     CREATE = 'createBalanceTransaction',
+    FIND_ALL = 'findAllBalanceTransaction',
     FIND_ALL_USER_ID = 'findAllUserIdBalanceTransaction',
+    FIND_ONE = 'findOneBalanceTransaction',
 }
