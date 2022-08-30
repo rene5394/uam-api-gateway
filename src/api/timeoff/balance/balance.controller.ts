@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
@@ -34,20 +34,68 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Get(':id')
-  findOne(@Param('id') id: string): Observable<Balance> {
-    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
+  async findOne(@Param('id') id: number): Promise<Observable<Balance>> {
+    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
+
+    const balanceFound = await new Promise<boolean>(resolve =>
+      balance.subscribe(result => {
+        if (!result) {
+         resolve(false);
+        }
+       
+        resolve(true);
+      })
+    );
+
+    if (!balanceFound) {
+      throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    return balance;
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/me')
-  findOneByUserJWT(@Auth() auth): Observable<Balance> {
-    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, auth.userId);
+  async findOneByUserJWT(@Auth() auth): Promise<Observable<Balance>> {
+    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, auth.userId);
+
+    const balanceFound = await new Promise<boolean>(resolve =>
+       balance.subscribe(result => {
+         if (!result) {
+          resolve(false);
+         }
+        
+         resolve(true);
+       })
+    );
+
+    if (!balanceFound) {
+      throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    return balance;
   }
 
   @Roles(Role.admin)
   @Get('/user/:userId')
-  findOneByUserId(@Param('userId') userId: string): Observable<Balance> {
-    return this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, userId);
+  async findOneByUserId(@Param('userId') userId: number): Promise<Observable<Balance>> {
+    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, userId);
+
+    const balanceFound = await new Promise<any>(resolve =>
+      balance.subscribe(result => {
+        if (!result) {
+         resolve(false);
+        }
+       
+        resolve(true);
+      })
+   );
+
+   if (!balanceFound) {
+     throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
+   }
+
+   return balance;
   }
 
   @Patch(':id')
