@@ -10,13 +10,20 @@ import { UpdateBalanceTransactionDto } from './dto/update-balance-transaction.dt
 
 @ApiTags('Balance Transactions')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('balance-transaction')
+@Controller('v1/timeoff/balance-transactions')
 export class BalanceTransactionController {
   constructor(private readonly balanceTransactionService: BalanceTransactionService) {}
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post()
   create(@Body() createBalanceTransactionDto: CreateBalanceTransactionDto) {
     return this.balanceTransactionService.create(createBalanceTransactionDto);
+  }
+
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('user/me')
+  findAllByUserJWT(@Auth() auth) {
+    return this.balanceTransactionService.findAll();
   }
 
   @Patch(':id')
