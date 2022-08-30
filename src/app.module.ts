@@ -7,6 +7,7 @@ import { StatusModule } from './api/attendance/status/status.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './api/team/user/user.module';
 import { TeamModule } from './api/team/team/team.module';
+import { BalanceTransactionModule } from './api/timeoff/balance-transaction/balance-transaction.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -29,6 +30,7 @@ import { TeamModule } from './api/team/team/team.module';
   StatusModule,
   AuthModule,
   UserModule,
-  TeamModule]
+  TeamModule,
+  BalanceTransactionModule]
 })
 export class AppModule {}
