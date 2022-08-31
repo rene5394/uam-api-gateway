@@ -5,9 +5,10 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
+import { RequestMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { CreateRequestDto } from './dto/create-request.dto';
-import { UpdateRequestDto } from './dto/update-request.dto';
+import { CreateRequestMeDto } from './dto/create-request-me.dto';
 
 @ApiTags('Timeoff Requests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -20,30 +21,30 @@ export class RequestController {
   @Roles(Role.admin)
   @Post()
   create(@Body() createRequestDto: CreateRequestDto) {
-    return this.requestService.create(createRequestDto);
+    return this.clientProxyRequest.send(RequestMSG.CREATE, createRequestDto);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post()
-  createByUserJWT(@Auth() auth, @Body() createRequestDto: CreateRequestDto) {
-    return this.requestService.create(createRequestDto);
+  createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto) {
+    return this.clientProxyRequest.send(RequestMSG.CREATE, createRequestMeDto);
   }
 
   @Roles(Role.admin)
   @Get()
   findAll() {
-    return this.requestService.findAll();
+    return this.clientProxyRequest.send(RequestMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get()
   findAllByUserJWT(@Auth() auth) {
-    return this.requestService.findAll();
+    return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, '');
   }
 
   @Roles(Role.admin)
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.requestService.findOne(+id);
+    return this.clientProxyRequest.send(RequestMSG.FIND_ONE, id);
   }
 }
