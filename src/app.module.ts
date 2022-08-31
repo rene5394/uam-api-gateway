@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './api/team/user/user.module';
 import { TeamModule } from './api/team/team/team.module';
 import { BalanceTransactionModule } from './api/timeoff/balance-transaction/balance-transaction.module';
+import { TypeModule } from './api/timeoff/type/type.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -31,6 +32,7 @@ import { BalanceTransactionModule } from './api/timeoff/balance-transaction/bala
   AuthModule,
   UserModule,
   TeamModule,
-  BalanceTransactionModule]
+  BalanceTransactionModule,
+  TypeModule]
 })
 export class AppModule {}
