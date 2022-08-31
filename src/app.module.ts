@@ -10,6 +10,8 @@ import { TeamModule } from './api/team/team/team.module';
 import { BalanceTransactionModule } from './api/timeoff/balance-transaction/balance-transaction.module';
 import { TypeModule } from './api/timeoff/type/type.module';
 import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status.module';
+import { RequestModule } from './api/timeoff/request/request.module';
+import { RequestDayModule } from './api/timeoff/request-day/request-day.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -35,6 +37,8 @@ import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status
   TeamModule,
   TimeOffStatusModule,
   TypeModule,
-  UserModule]
+  UserModule,
+  RequestModule,
+  RequestDayModule]
 })
 export class AppModule {}
