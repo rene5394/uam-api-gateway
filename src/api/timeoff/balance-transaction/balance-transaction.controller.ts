@@ -11,7 +11,7 @@ import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { CreateBalanceTransactionDto } from './dto/create-balance-transaction.dto';
 import { BalanceTransaction } from './entities/balance-transaction.entity';
 
-@ApiTags('Balance Transactions')
+@ApiTags('Timeoff Balance Transactions')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balance-transactions')
 export class BalanceTransactionController {

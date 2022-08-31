@@ -8,7 +8,7 @@ import { Role } from '../../../common/enums/role.enum';
 import { TeamMSG } from 'src/common/constants/team-messages';
 import { ClientProxyTeam } from 'src/common/proxy/client-proxy-team';
 
-@ApiTags('Teams')
+@ApiTags('Team Teams')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/team/teams')
 export class TeamController {

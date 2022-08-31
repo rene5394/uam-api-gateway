@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { UserMSG } from 'src/common/constants/team-messages';
 import { ClientProxyTeam } from 'src/common/proxy/client-proxy-team';
 
-@ApiTags('Users')
+@ApiTags('Team Users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/team/users')
 export class UserController {

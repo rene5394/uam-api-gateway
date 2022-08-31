@@ -12,7 +12,7 @@ import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
 
-@ApiTags('Balances')
+@ApiTags('Timeoff Balances')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balances')
 export class BalanceController {

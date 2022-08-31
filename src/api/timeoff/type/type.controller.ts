@@ -9,7 +9,7 @@ import { TypeMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { Type } from './entities/type.entity';
 
-@ApiTags('Request Types')
+@ApiTags('Timeoff Request Types')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/types')
 export class TypeController {

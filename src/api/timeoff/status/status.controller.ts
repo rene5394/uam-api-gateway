@@ -9,7 +9,7 @@ import { StatusMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { Status } from './entities/status.entity';
 
-@ApiTags('Request Statuses')
+@ApiTags('Timeoff Request Statuses')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/statuses')
 export class StatusController {
