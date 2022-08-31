@@ -12,3 +12,8 @@ export enum BalanceTransactionMSG {
     FIND_ALL_USER_ID = 'findAllUserIdBalanceTransaction',
     FIND_ONE = 'findOneBalanceTransaction',
 }
+
+export enum TypeMSG {
+    FIND_ALL = 'findType',
+    FIND_ONE = 'findOneType',
+}

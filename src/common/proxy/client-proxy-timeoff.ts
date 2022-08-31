@@ -26,4 +26,14 @@ export class ClientProxyTimeOff  {
       }
     });
   }
+
+  clientProxyType(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.TimeOffTypeQueue
+      }
+    });
+  }
 }
