@@ -3,13 +3,13 @@ import { BalanceModule } from './api/timeoff/balance/balance.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntrieModule } from './api/attendance/entry/entry.module';
-import { StatusModule } from './api/attendance/status/status.module';
+import { StatusModule as AttendanceStatusModule } from './api/attendance/status/status.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './api/team/user/user.module';
 import { TeamModule } from './api/team/team/team.module';
 import { BalanceTransactionModule } from './api/timeoff/balance-transaction/balance-transaction.module';
 import { TypeModule } from './api/timeoff/type/type.module';
-import { StatusModule } from './api/timeoff/status/status.module';
+import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -27,13 +27,14 @@ import { StatusModule } from './api/timeoff/status/status.module';
     autoLoadEntities: true,
     synchronize: false
   }),
-  BalanceModule,
-  EntrieModule,
-  StatusModule,
+  AttendanceStatusModule,
   AuthModule,
-  UserModule,
-  TeamModule,
+  BalanceModule,
   BalanceTransactionModule,
-  TypeModule]
+  EntrieModule,
+  TeamModule,
+  TimeOffStatusModule,
+  TypeModule,
+  UserModule]
 })
 export class AppModule {}
