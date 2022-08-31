@@ -1,6 +1,5 @@
 import { Controller, Get, Param, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
