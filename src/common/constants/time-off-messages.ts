@@ -13,6 +13,11 @@ export enum BalanceTransactionMSG {
     FIND_ONE = 'findOneBalanceTransaction',
 }
 
+export enum StatusMSG {
+    FIND_ALL = 'findStatus',
+    FIND_ONE = 'findOneStatus',
+}
+
 export enum TypeMSG {
     FIND_ALL = 'findType',
     FIND_ONE = 'findOneType',
