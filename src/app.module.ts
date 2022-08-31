@@ -9,6 +9,7 @@ import { UserModule } from './api/team/user/user.module';
 import { TeamModule } from './api/team/team/team.module';
 import { BalanceTransactionModule } from './api/timeoff/balance-transaction/balance-transaction.module';
 import { TypeModule } from './api/timeoff/type/type.module';
+import { StatusModule } from './api/timeoff/status/status.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
