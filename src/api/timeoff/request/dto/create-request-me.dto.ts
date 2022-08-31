@@ -1,8 +1,9 @@
 import { IsDateString, IsInt, IsOptional, Max, Min } from "@nestjs/class-validator";
 
-export class CreateRequestDto {
+export class CreateRequestMeDto {
     @IsInt()
     @Min(1)
+    @IsOptional()
     userId: number;
 
     @IsInt()
