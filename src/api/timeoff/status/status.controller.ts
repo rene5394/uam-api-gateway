@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 
-@Controller('status')
+@ApiTags('Request Statuses')
+@Controller('v1/timeoff/statuses')
 export class StatusController {
   constructor(private readonly clientProxy: ClientProxyTimeOff) {}
 
