@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
@@ -30,21 +31,21 @@ export class TransactionController {
     return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL, '');
   }
 
-  @Roles(Role.admin)
-  @Get(':userId')
-  findOneByUserId(@Param('userId') userId: number): Observable<Transaction[]> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_USER_ID, userId);
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('/user/me')
+  findAllByUserJWT(@Auth() auth): Observable<Transaction[]> {
+    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_USER_ID, auth.userId);
   }
 
-  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
-  @Get(':userId')
-  findOneByUserJWT(@Param('userId') userId: number): Observable<Transaction[]> {
+  @Roles(Role.admin)
+  @Get('/user/:userId')
+  findAllByUserId(@Param('userId') userId: number): Observable<Transaction[]> {
     return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_USER_ID, userId);
   }
 
   @Roles(Role.admin)
   @Get(':requestId')
-  findOneByRequestId(@Param('requestId') requestId: number): Observable<Transaction[]> {
+  findAllByRequestId(@Param('requestId') requestId: number): Observable<Transaction[]> {
     return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_REQUEST_ID, requestId);
   }
 
