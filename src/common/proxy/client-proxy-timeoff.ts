@@ -47,6 +47,26 @@ export class ClientProxyTimeOff  {
     });
   }
 
+  clientProxyTransaction(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.TimeOffTransactionQueue
+      }
+    });
+  }
+
+  clientProxyTransactionStatus(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.timeoffTransactionStatusQueue
+      }
+    });
+  }
+
   clientProxyType(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,

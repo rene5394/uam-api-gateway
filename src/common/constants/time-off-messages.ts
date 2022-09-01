@@ -25,6 +25,18 @@ export enum StatusMSG {
     FIND_ONE = 'findOneStatus',
 }
 
+export enum TransctionMSG {
+    CREATE = 'createTransaction',
+    FIND_ALL = 'findAllTransaction',
+    FIND_ALL_USER_ID = 'findAllUserIdTransaction',
+    FIND_ONE = 'findOneTransaction',
+}
+
+export enum TransactionStatusMSG {
+    FIND_ALL = 'findAllTransactionStatus',
+    FIND_ONE = 'findOneTransactionStatus',
+}
+
 export enum TypeMSG {
     FIND_ALL = 'findAllType',
     FIND_ONE = 'findOneType',

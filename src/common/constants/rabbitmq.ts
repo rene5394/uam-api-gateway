@@ -8,6 +8,8 @@ export enum RabbitMQ {
   TimeOffBalanceTransactionQueue = 'timeoffBalanceTransaction',
   TimeOffRequestQueue = 'timeoffRequest',
   TimeOffStatusQueue = 'timeoffStatus',
+  TimeOffTransactionQueue = 'timeoffTransaction',
+  timeoffTransactionStatusQueue = 'timeoffTransactionStatus',
   TimeOffTypeQueue = 'timeoffType',
   // Attendance Queues
   AttendanceEntryQueue = 'attendanceEntry',
