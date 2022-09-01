@@ -29,6 +29,7 @@ export enum TransctionMSG {
     CREATE = 'createTransaction',
     FIND_ALL = 'findAllTransaction',
     FIND_ALL_USER_ID = 'findAllUserIdTransaction',
+    FIND_ALL_REQUEST_ID = 'findAllRequestIdTransaction',
     FIND_ONE = 'findOneTransaction',
 }
 
