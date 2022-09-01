@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TransactionStatusService } from './transaction-status.service';
-import { CreateTransactionStatusDto } from './dto/create-transaction-status.dto';
-import { UpdateTransactionStatusDto } from './dto/update-transaction-status.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpStatus, HttpException } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../auth/guards/roles.guard';
+import { Roles } from '../../../common/decorators/role.decorator';
+import { Role } from '../../../common/enums/role.enum';
+import { Observable } from 'rxjs';
+import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { TransactionStatusMSG } from 'src/common/constants/time-off-messages';
+import { TransactionStatus } from './entities/transaction-status.entity';
 
-@Controller('transaction-status')
+@ApiTags('Timeoff Transaction Statuses')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Controller('v1/timeoff/transaction-statuses')
 export class TransactionStatusController {
-  constructor(private readonly transactionStatusService: TransactionStatusService) {}
+  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
 
-  @Post()
-  create(@Body() createTransactionStatusDto: CreateTransactionStatusDto) {
-    return this.transactionStatusService.create(createTransactionStatusDto);
-  }
+  private clientProxyTransactionStatus = this.clientProxy.clientProxyTransactionStatus();
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get()
-  findAll() {
-    return this.transactionStatusService.findAll();
+  findAll(): Observable<TransactionStatus[]> {
+    return this.clientProxyTransactionStatus.send(TransactionStatusMSG.FIND_ALL, '');
   }
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionStatusService.findOne(+id);
-  }
+  async findOne(@Param('id') id: number): Promise<Observable<TransactionStatus>> {
+    const transactionStatus = this.clientProxyTransactionStatus.send(TransactionStatusMSG.FIND_ONE, id);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTransactionStatusDto: UpdateTransactionStatusDto) {
-    return this.transactionStatusService.update(+id, updateTransactionStatusDto);
-  }
+    const transactionStatusFound = await new Promise<boolean>(resolve =>
+      transactionStatus.subscribe(result => {
+        if (!result) {
+         resolve(false);
+        }
+       
+        resolve(true);
+      })
+    );
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionStatusService.remove(+id);
+    if (!transactionStatusFound) {
+      throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    return transactionStatus;
   }
 }
