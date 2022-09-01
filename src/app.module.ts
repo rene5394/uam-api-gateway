@@ -11,7 +11,6 @@ import { BalanceTransactionModule } from './api/timeoff/balance-transaction/bala
 import { TypeModule } from './api/timeoff/type/type.module';
 import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status.module';
 import { RequestModule } from './api/timeoff/request/request.module';
-import { RequestDayModule } from './api/timeoff/request-day/request-day.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -38,7 +37,6 @@ import { RequestDayModule } from './api/timeoff/request-day/request-day.module';
   TimeOffStatusModule,
   TypeModule,
   UserModule,
-  RequestModule,
-  RequestDayModule]
+  RequestModule]
 })
 export class AppModule {}
