@@ -12,6 +12,7 @@ import { TypeModule } from './api/timeoff/type/type.module';
 import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status.module';
 import { RequestModule } from './api/timeoff/request/request.module';
 import { TransactionModule } from './api/timeoff/transaction/transaction.module';
+import { TransactionStatusModule } from './api/timeoff/transaction-status/transaction-status.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -39,6 +40,7 @@ import { TransactionModule } from './api/timeoff/transaction/transaction.module'
   TypeModule,
   UserModule,
   RequestModule,
-  TransactionModule]
+  TransactionModule,
+  TransactionStatusModule]
 })
 export class AppModule {}
