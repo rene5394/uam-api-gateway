@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TransactionStatusService } from './transaction-status.service';
+import { ProxyModule } from 'src/common/proxy/proxy.module';
 import { TransactionStatusController } from './transaction-status.controller';
 
 @Module({
-  controllers: [TransactionStatusController],
-  providers: [TransactionStatusService]
+  imports: [ProxyModule],
+  controllers: [TransactionStatusController]
 })
 export class TransactionStatusModule {}
