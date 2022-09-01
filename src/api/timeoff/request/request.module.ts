@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RequestService } from './request.service';
+import { ProxyModule } from 'src/common/proxy/proxy.module';
 import { RequestController } from './request.controller';
 
 @Module({
-  controllers: [RequestController],
-  providers: [RequestService]
+  imports: [ProxyModule],
+  controllers: [RequestController]
 })
 export class RequestModule {}
