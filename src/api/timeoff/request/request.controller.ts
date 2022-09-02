@@ -27,9 +27,26 @@ export class RequestController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post('/user/me')
-  createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto) {
+  async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto) {    
     createRequestMeDto.userId = auth.userId;
-    return this.clientProxyRequest.send(RequestMSG.CREATE, createRequestMeDto);
+    createRequestMeDto.createdBy = auth.userId;
+    createRequestMeDto.roleId = auth.roleId;
+
+    const requestFound = await new Promise<boolean>(resolve =>
+      this.clientProxyRequest.send(RequestMSG.CREATE_USER_ID, createRequestMeDto).subscribe(result => {
+        if (!result) {
+          resolve(false);
+        }
+        
+        resolve(result);
+      })
+    );
+
+    if (!requestFound) {
+      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+    }
+ 
+    return requestFound;
   }
 
   @Roles(Role.admin)
@@ -63,7 +80,7 @@ export class RequestController {
        
         resolve(true);
       })
-   );
+    );
 
    if (!requestFound) {
      throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
