@@ -21,4 +21,7 @@ export class CreateRequestMeDto {
 
     @IsDateString()
     endDate: Date;
+
+    @IsOptional()
+    roleId: number;
 }
