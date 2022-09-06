@@ -30,7 +30,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any): Promise<string> {
+  async login(user: any): Promise<any> {
     const payload = {
       userId: user.id,
       email: user.email,
@@ -38,9 +38,12 @@ export class AuthService {
       hr: user.hr
     };
 
-    return this.jwtService.signAsync(payload, {
+    const roleId = user.role_id;
+    const jwt = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_SECRET,
       algorithm: 'HS256'
     });
+    
+    return { roleId, jwt };
   }
 }
