@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
@@ -10,7 +10,7 @@ import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { CreateRequestMeDto } from './dto/create-request-me.dto';
 import { Hrs } from 'src/common/decorators/hr.decorator';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 
 @ApiTags('Timeoff Requests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -52,8 +52,11 @@ export class RequestController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/me')
-  findAllByUserJWT(@Auth() auth) {
-    return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, auth.userId);
+  findAllByUserJWT(@Auth() auth, @Query('status') statusQuery) {
+    const status = (statusQuery) ? statusQuery : '';
+    const findParams = { userId: auth.userId, status: status };
+
+    return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, findParams);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
