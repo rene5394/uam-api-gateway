@@ -10,6 +10,7 @@ import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { CreateRequestMeDto } from './dto/create-request-me.dto';
 import { Hrs } from 'src/common/decorators/hr.decorator';
+import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 
 @ApiTags('Timeoff Requests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,26 +28,20 @@ export class RequestController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post('/user/me')
-  async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto) {    
+  async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto): Promise<Observable<Request>> {
     createRequestMeDto.userId = auth.userId;
     createRequestMeDto.createdBy = auth.userId;
     createRequestMeDto.roleId = auth.roleId;
 
-    const requestFound = await new Promise<boolean>(resolve =>
-      this.clientProxyRequest.send(RequestMSG.CREATE_USER_ID, createRequestMeDto).subscribe(result => {
-        if (!result) {
-          resolve(false);
-        }
-        
-        resolve(result);
-      })
-    );
-
-    if (!requestFound) {
+    try {
+      const request = this.clientProxyRequest.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
+      const requestFound = await lastValueFrom(request);
+      
+      return requestFound;
+    } catch (err) {
+      
       throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
     }
- 
-    return requestFound;
   }
 
   @Roles(Role.admin)
