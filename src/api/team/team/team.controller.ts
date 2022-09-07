@@ -27,4 +27,9 @@ export class TeamController {
   findOne(@Param('id') id: number) {
     return this._clientProxyTeam.send(TeamMSG.FIND_ONE, id);
   }
+
+  @Get('/user/me')
+  findOneByUserJWT(@Auth() auth) {
+    return this._clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, auth.userId);
+  }
 }
