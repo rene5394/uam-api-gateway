@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -19,8 +19,10 @@ export class TypeController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get()
-  findAll(): Observable<Type[]> {
-    return this.clientProxyType.send(TypeMSG.FIND_ALL, '');
+  findAll(@Query('app') appQuery): Observable<Type[]> {
+    const app = (appQuery) ? appQuery : '';
+
+    return this.clientProxyType.send(TypeMSG.FIND_ALL, app);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
