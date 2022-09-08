@@ -22,8 +22,18 @@ export class RequestController {
 
   @Roles(Role.admin)
   @Post()
-  create(@Body() createRequestDto: CreateRequestDto) {
-    return this.clientProxyRequest.send(RequestMSG.CREATE, createRequestDto);
+  async create(@Auth() auth, @Body() createRequestDto: CreateRequestDto) {
+    createRequestDto.createdBy = auth.userId;
+
+    try {
+      const request = this.clientProxyRequest.send(RequestMSG.CREATE, createRequestDto);
+      const requestFound = await lastValueFrom(request);
+      
+      return requestFound;
+    } catch (err) {
+
+      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
@@ -40,7 +50,7 @@ export class RequestController {
       return requestFound;
     } catch (err) {
       
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
