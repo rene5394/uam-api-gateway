@@ -75,6 +75,12 @@ export class RequestController {
     return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, userId);
   }
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('year/:year/month/:month')
+  findNumberOfRequestsByYearAndMonth(@Param() findParams) {
+    return this.clientProxyRequest.send(RequestMSG.FIND_NUMBER_OF_REQUEST_YEAR_AND_MONTH, findParams);
+  }
+
   @Roles(Role.admin)
   @Get(':id')
   async findOne(@Param('id') id: number) {

@@ -18,6 +18,7 @@ export enum RequestMSG {
     CREATE_USER_ID = 'createUserIdRequest',
     FIND_ALL = 'findAllRequest',
     FIND_ALL_USER_ID = 'findAllUserIdRequest',
+    FIND_NUMBER_OF_REQUEST_YEAR_AND_MONTH = 'findNumberOfRequestByYearAndMonth',
     FIND_ONE = 'findOneRequest',
 }
 
