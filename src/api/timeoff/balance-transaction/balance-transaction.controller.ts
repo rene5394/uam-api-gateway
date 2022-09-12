@@ -7,7 +7,7 @@ import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
 import { BalanceTransactionMSG } from 'src/common/constants/time-off-messages';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateBalanceTransactionDto } from './dto/create-balance-transaction.dto';
 import { BalanceTransaction } from './entities/balance-transaction.entity';
 
@@ -15,38 +15,38 @@ import { BalanceTransaction } from './entities/balance-transaction.entity';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balance-transactions')
 export class BalanceTransactionController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyBalanceTransaction = this.clientProxy.clientProxyBalanceTransaction();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post()
   create(@Body() createBalanceTransactionDto: CreateBalanceTransactionDto): Observable<BalanceTransaction> {
-    return this.clientProxyBalanceTransaction.send(BalanceTransactionMSG.CREATE, createBalanceTransactionDto);
+    return this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE, createBalanceTransactionDto);
   }
 
   @Roles(Role.admin)
   @Get()
   findAll(@Auth() auth): Observable<BalanceTransaction[]> {
-    return this.clientProxyBalanceTransaction.send(BalanceTransactionMSG.FIND_ALL, '');
+    return this.clientProxyTimeOff.send(BalanceTransactionMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/me')
   findAllByUserJWT(@Auth() auth): Observable<BalanceTransaction[]> {
-    return this.clientProxyBalanceTransaction.send(BalanceTransactionMSG.FIND_ALL_USER_ID, auth.userId);
+    return this.clientProxyTimeOff.send(BalanceTransactionMSG.FIND_ALL_USER_ID, auth.userId);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/:userId')
   findAllByUserId(@Param('userId') userId: string): Observable<BalanceTransaction[]> {
-    return this.clientProxyBalanceTransaction.send(BalanceTransactionMSG.FIND_ALL_USER_ID, userId);
+    return this.clientProxyTimeOff.send(BalanceTransactionMSG.FIND_ALL_USER_ID, userId);
   }
 
   @Roles(Role.admin)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Observable<BalanceTransaction>> {
-    const balanceTransaction = this.clientProxyBalanceTransaction.send(BalanceTransactionMSG.FIND_ONE, id);
+    const balanceTransaction = this.clientProxyTimeOff.send(BalanceTransactionMSG.FIND_ONE, id);
 
     const balanceTransactionFound = await new Promise<boolean>(resolve =>
       balanceTransaction.subscribe(result => {

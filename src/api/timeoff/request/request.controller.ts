@@ -6,7 +6,7 @@ import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { RequestMSG } from 'src/common/constants/time-off-messages';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { CreateRequestMeDto } from './dto/create-request-me.dto';
 import { Hrs } from 'src/common/decorators/hr.decorator';
@@ -16,9 +16,9 @@ import { lastValueFrom, Observable } from 'rxjs';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/requests')
 export class RequestController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyRequest = this.clientProxy.clientProxyBalance();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin)
   @Post()
@@ -26,7 +26,7 @@ export class RequestController {
     createRequestDto.createdBy = auth.userId;
 
     try {
-      const request = this.clientProxyRequest.send(RequestMSG.CREATE, createRequestDto);
+      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE, createRequestDto);
       const requestFound = await lastValueFrom(request);
       
       return requestFound;
@@ -44,7 +44,7 @@ export class RequestController {
     createRequestMeDto.roleId = auth.roleId;
 
     try {
-      const request = this.clientProxyRequest.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
+      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
       const requestFound = await lastValueFrom(request);
       
       return requestFound;
@@ -57,7 +57,7 @@ export class RequestController {
   @Roles(Role.admin)
   @Get()
   findAll() {
-    return this.clientProxyRequest.send(RequestMSG.FIND_ALL, '');
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
@@ -66,25 +66,25 @@ export class RequestController {
     const status = (statusQuery) ? statusQuery : '';
     const findParams = { userId: auth.userId, status: status };
 
-    return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, findParams);
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, findParams);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/:userId')
   findAllByUserId(@Param('userId') userId: number) {
-    return this.clientProxyRequest.send(RequestMSG.FIND_ALL_USER_ID, userId);
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, userId);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('year/:year/month/:month')
   findNumberOfRequestsByYearAndMonth(@Param() findParams) {
-    return this.clientProxyRequest.send(RequestMSG.FIND_NUMBER_OF_REQUEST_YEAR_AND_MONTH, findParams);
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_NUMBER_OF_REQUEST_YEAR_AND_MONTH, findParams);
   }
 
   @Roles(Role.admin)
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    const request = this.clientProxyRequest.send(RequestMSG.FIND_ONE, id);
+    const request = this.clientProxyTimeOff.send(RequestMSG.FIND_ONE, id);
 
     const requestFound = await new Promise<boolean>(resolve =>
       request.subscribe(result => {

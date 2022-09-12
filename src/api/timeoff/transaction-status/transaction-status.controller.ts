@@ -5,7 +5,7 @@ import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { TransactionStatusMSG } from 'src/common/constants/time-off-messages';
 import { TransactionStatus } from './entities/transaction-status.entity';
 
@@ -13,20 +13,20 @@ import { TransactionStatus } from './entities/transaction-status.entity';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/transaction-statuses')
 export class TransactionStatusController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyTransactionStatus = this.clientProxy.clientProxyTransactionStatus();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get()
   findAll(): Observable<TransactionStatus[]> {
-    return this.clientProxyTransactionStatus.send(TransactionStatusMSG.FIND_ALL, '');
+    return this.clientProxyTimeOff.send(TransactionStatusMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Observable<TransactionStatus>> {
-    const transactionStatus = this.clientProxyTransactionStatus.send(TransactionStatusMSG.FIND_ONE, id);
+    const transactionStatus = this.clientProxyTimeOff.send(TransactionStatusMSG.FIND_ONE, id);
 
     const transactionStatusFound = await new Promise<boolean>(resolve =>
       transactionStatus.subscribe(result => {

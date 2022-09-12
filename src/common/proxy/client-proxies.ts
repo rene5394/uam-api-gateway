@@ -4,25 +4,35 @@ import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservice
 import { RabbitMQ } from '../constants/rabbitmq';
 
 @Injectable()
-export class ClientProxyAttendance  {
+export class ClientProxies  {
   constructor(private readonly configService: ConfigService) {}
 
-  clientProxyEntry(): ClientProxy {
+  clientProxyAttendance(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
           urls: this.configService.get('AMQP_URL'),
-          queue: RabbitMQ.AttendanceEntryQueue
+          queue: RabbitMQ.AttendanceQueue
       }
     });
   }
 
-  clientProxyStatus(): ClientProxy {
+  clientProxyTeam(): ClientProxy {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
           urls: this.configService.get('AMQP_URL'),
-          queue: RabbitMQ.AttendanceStatusQueue
+          queue: RabbitMQ.TeamQueue
+      }
+    });
+  }
+
+  clientProxyTimeOff(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+          urls: this.configService.get('AMQP_URL'),
+          queue: RabbitMQ.TimeOffQueue
       }
     });
   }

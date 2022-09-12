@@ -6,7 +6,7 @@ import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { TransctionMSG } from '../../../common/constants/time-off-messages';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
@@ -15,43 +15,43 @@ import { Transaction } from './entities/transaction.entity';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/transactions')
 export class TransactionController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyTransaction = this.clientProxy.clientProxyTransaction();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin)
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto): Observable<Transaction> {
-    return this.clientProxyTransaction.send(TransctionMSG.CREATE, createTransactionDto);
+    return this.clientProxyTimeOff.send(TransctionMSG.CREATE, createTransactionDto);
   }
 
   @Roles(Role.admin)
   @Get()
   findAll(): Observable<Transaction[]> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL, '');
+    return this.clientProxyTimeOff.send(TransctionMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('/user/me')
   findAllByUserJWT(@Auth() auth): Observable<Transaction[]> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_USER_ID, auth.userId);
+    return this.clientProxyTimeOff.send(TransctionMSG.FIND_ALL_USER_ID, auth.userId);
   }
 
   @Roles(Role.admin)
   @Get('/user/:userId')
   findAllByUserId(@Param('userId') userId: number): Observable<Transaction[]> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_USER_ID, userId);
+    return this.clientProxyTimeOff.send(TransctionMSG.FIND_ALL_USER_ID, userId);
   }
 
   @Roles(Role.admin)
   @Get(':requestId')
   findAllByRequestId(@Param('requestId') requestId: number): Observable<Transaction[]> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ALL_REQUEST_ID, requestId);
+    return this.clientProxyTimeOff.send(TransctionMSG.FIND_ALL_REQUEST_ID, requestId);
   }
 
   @Roles(Role.admin)
   @Get(':id')
   findOne(@Param('id') id: number): Observable<Transaction> {
-    return this.clientProxyTransaction.send(TransctionMSG.FIND_ONE, id);
+    return this.clientProxyTimeOff.send(TransctionMSG.FIND_ONE, id);
   }
 }

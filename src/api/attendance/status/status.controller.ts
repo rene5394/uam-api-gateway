@@ -2,16 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { StatusMSG } from 'src/common/constants/attendance-messages';
-import { ClientProxyAttendance } from 'src/common/proxy/client-proxy-attendance';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 
 @ApiTags('Attendance Statuses')
 @Controller('v1/attendance/status')
 export class StatusController {
-  constructor(private readonly clientProxy: ClientProxyAttendance) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyStatus = this.clientProxy.clientProxyStatus();
+  private clientProxyAttendance = this.clientProxy.clientProxyAttendance();
 
   @Post()
   create(@Body() createStatusDto: CreateStatusDto) {
@@ -20,12 +20,12 @@ export class StatusController {
 
   @Get()
   findAll() {
-    return this.clientProxyStatus.send(StatusMSG.FIND_ALL, '');
+    return this.clientProxyAttendance.send(StatusMSG.FIND_ALL, '');
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientProxyStatus.send(StatusMSG.FIND_ONE, id);
+    return this.clientProxyAttendance.send(StatusMSG.FIND_ONE, id);
   }
 
   @Patch(':id')

@@ -7,7 +7,7 @@ import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
 import { BalanceMSG } from 'src/common/constants/time-off-messages';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
@@ -16,26 +16,26 @@ import { Balance } from './entities/balance.entity';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balances')
 export class BalanceController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyBalance = this.clientProxy.clientProxyBalance();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin)
   @Post()
   create(@Body() createBalanceDto: CreateBalanceDto): Observable<Balance> {
-    return this.clientProxyBalance.send(BalanceMSG.CREATE, createBalanceDto);
+    return this.clientProxyTimeOff.send(BalanceMSG.CREATE, createBalanceDto);
   }
 
   @Roles(Role.admin)
   @Get()
   findAll(): Observable<Balance[]> {
-    return this.clientProxyBalance.send(BalanceMSG.FIND_ALL, '');
+    return this.clientProxyTimeOff.send(BalanceMSG.FIND_ALL, '');
   }
 
   @Roles(Role.admin)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Observable<Balance>> {
-    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE, id);
+    const balance = this.clientProxyTimeOff.send(BalanceMSG.FIND_ONE, id);
 
     const balanceFound = await new Promise<boolean>(resolve =>
       balance.subscribe(result => {
@@ -57,7 +57,7 @@ export class BalanceController {
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/me')
   async findOneByUserJWT(@Auth() auth): Promise<Observable<Balance>> {
-    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, auth.userId);
+    const balance = this.clientProxyTimeOff.send(BalanceMSG.FIND_ONE_USER_ID, auth.userId);
 
     const balanceFound = await new Promise<boolean>(resolve =>
        balance.subscribe(result => {
@@ -79,7 +79,7 @@ export class BalanceController {
   @Roles(Role.admin)
   @Get('/user/:userId')
   async findOneByUserId(@Param('userId') userId: number): Promise<Observable<Balance>> {
-    const balance = this.clientProxyBalance.send(BalanceMSG.FIND_ONE_USER_ID, userId);
+    const balance = this.clientProxyTimeOff.send(BalanceMSG.FIND_ONE_USER_ID, userId);
 
     const balanceFound = await new Promise<any>(resolve =>
       balance.subscribe(result => {

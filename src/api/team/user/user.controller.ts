@@ -7,30 +7,30 @@ import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
 import { UserMSG } from 'src/common/constants/team-messages';
-import { ClientProxyTeam } from 'src/common/proxy/client-proxy-team';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 
 @ApiTags('Team Users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/team/users')
 export class UserController {
-  constructor(private readonly clientProxy: ClientProxyTeam) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyUser = this.clientProxy.clientProxyUser();
+  private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
   @Get()
   findAll(@Query('status') statusQuery)  {
     const status = (statusQuery) ? statusQuery : '';
 
-    return this.clientProxyUser.send(UserMSG.FIND_ALL, status);
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL, status);
   }
 
   @Get('/me')
   findOneByUserJWT(@Auth() auth) {
-    return this.clientProxyUser.send(UserMSG.FIND_ONE, auth.userId);
+    return this.clientProxyTeam.send(UserMSG.FIND_ONE, auth.userId);
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.clientProxyUser.send(UserMSG.FIND_ONE, id);
+    return this.clientProxyTeam.send(UserMSG.FIND_ONE, id);
   }
 }

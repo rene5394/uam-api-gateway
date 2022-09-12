@@ -6,29 +6,29 @@ import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { Observable } from 'rxjs';
 import { TypeMSG } from 'src/common/constants/time-off-messages';
-import { ClientProxyTimeOff } from 'src/common/proxy/client-proxy-timeoff';
+import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { Type } from './entities/type.entity';
 
 @ApiTags('Timeoff Request Types')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/types')
 export class TypeController {
-  constructor(private readonly clientProxy: ClientProxyTimeOff) {}
+  constructor(private readonly clientProxy: ClientProxies) {}
 
-  private clientProxyType = this.clientProxy.clientProxyType(); 
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff(); 
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get()
   findAll(@Query('app') appQuery): Observable<Type[]> {
     const app = (appQuery) ? appQuery : '';
 
-    return this.clientProxyType.send(TypeMSG.FIND_ALL, app);
+    return this.clientProxyTimeOff.send(TypeMSG.FIND_ALL, app);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Observable<Type>> {
-    const type = this.clientProxyType.send(TypeMSG.FIND_ONE, id);
+    const type = this.clientProxyTimeOff.send(TypeMSG.FIND_ONE, id);
 
     const typeFound = await new Promise<boolean>(resolve =>
       type.subscribe(result => {
