@@ -18,7 +18,7 @@ export class UserController {
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
   @Get()
-  findAll(@Query() queryParams)  {
+  findAll(@Query() queryParams) {
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page) ? queryParams.page : '';
     const findParams = { page, status };
