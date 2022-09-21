@@ -1,9 +1,11 @@
 export enum EmployeeMSG {
-  FIND_ALL =  'findAllEmployee'
+  FIND_ALL = 'findAllEmployee',
+  FIND_ONE = 'findOneEmployee'
 }
 
 export enum MemberMSG {
-  FIND_ALL =  'findAllMember'
+  FIND_ALL = 'findAllMember',
+  FIND_ONE = 'findOneMember'
 }
 
 export enum TeamMSG {

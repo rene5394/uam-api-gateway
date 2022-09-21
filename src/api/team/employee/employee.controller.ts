@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
@@ -24,5 +24,10 @@ export class EmployeeController {
     const findParams = { userIds, page };
 
     return this.clientProxyTeam.send(EmployeeMSG.FIND_ALL, findParams);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.clientProxyTeam.send(EmployeeMSG.FIND_ONE, id);
   }
 }
