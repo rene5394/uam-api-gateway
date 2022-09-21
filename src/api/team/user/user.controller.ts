@@ -18,10 +18,22 @@ export class UserController {
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
   @Get()
-  findAll(@Query('status') statusQuery)  {
-    const status = (statusQuery) ? statusQuery : '';
+  findAll(@Query() queryParams)  {
+    const status = (queryParams.status) ? queryParams.status : '';
+    const page = (queryParams.page) ? queryParams.page : '';
+    const findParams = { page, status };
 
-    return this.clientProxyTeam.send(UserMSG.FIND_ALL, status);
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL, findParams);
+  }
+
+  @Get('employees')
+  @Get()
+  findAllEmployees(@Query() queryParams)  {
+    const status = (queryParams.status) ? queryParams.status : '';
+    const page = (queryParams.page) ? queryParams.page : '';
+    const findParams = { page, status };
+
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
   }
 
   @Get('/me')
