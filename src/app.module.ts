@@ -13,6 +13,8 @@ import { StatusModule as TimeOffStatusModule } from './api/timeoff/status/status
 import { RequestModule } from './api/timeoff/request/request.module';
 import { TransactionModule } from './api/timeoff/transaction/transaction.module';
 import { TransactionStatusModule } from './api/timeoff/transaction-status/transaction-status.module';
+import { EmployeeModule } from './api/team/employee/employee.module';
+import { MemberModule } from './api/team/member/member.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -34,7 +36,9 @@ import { TransactionStatusModule } from './api/timeoff/transaction-status/transa
   AuthModule,
   BalanceModule,
   BalanceTransactionModule,
+  EmployeeModule,
   EntrieModule,
+  MemberModule,
   TeamModule,
   TimeOffStatusModule,
   TypeModule,
