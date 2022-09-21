@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
@@ -28,8 +28,12 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Get()
-  findAll(): Observable<Balance[]> {
-    return this.clientProxyTimeOff.send(BalanceMSG.FIND_ALL, '');
+  findAll(@Query() queryParams): Observable<Balance[]> {
+    const userIds = (queryParams.userIds) ? queryParams.userIds : '';
+    const page = (queryParams.page) ? queryParams.page : '';
+    const findParams = { userIds, page };
+    
+    return this.clientProxyTimeOff.send(BalanceMSG.FIND_ALL, findParams);
   }
 
   @Roles(Role.admin)
