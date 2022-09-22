@@ -11,7 +11,7 @@ import { ClientProxies } from 'src/common/proxy/client-proxies';
 
 @ApiTags('Team Members')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Controller('members')
+@Controller('v1/team/members')
 export class MemberController {
   constructor(private readonly clientProxy: ClientProxies) {}
 
@@ -20,8 +20,7 @@ export class MemberController {
   @Get()
   findAll(@Query() queryParams) {
     const employeeIds = (queryParams.employeeIds) ? queryParams.employeeIds : '';
-    const page = (queryParams.page) ? queryParams.page : '';
-    const findParams = { employeeIds, page };
+    const findParams = { employeeIds };
 
     return this.clientProxyTeam.send(MemberMSG.FIND_ALL, findParams);
   }
