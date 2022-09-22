@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: process.env.JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request) => {
-          return request?.cookies['timeoff-auth-cookie'];
+          return request.cookies['timeoff-auth-cookie'];
         }
       ])
     });
