@@ -16,4 +16,7 @@ export class Auth {
 
     @Column({ type: 'tinyint', nullable: false })
     hr: number;
+
+    @Column({ type: 'int', nullable: false })
+    status_id: number;
 }
