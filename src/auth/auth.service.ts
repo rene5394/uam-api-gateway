@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
@@ -14,20 +14,23 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.authRepository.findOne({ where : {email: email} });
+    const user = await this.authRepository.findOne({ where : {email: email, status_id: 1} });
 
-    if (user) {
-      let hash = user.password;
-      hash = hash.replace(/^\$2y(.+)$/i, '$2a$1');
-      const match = await bcrypt.compare(pass, hash);
-
-      if (match) {
-        const { password, ...result } = user;
-        return result;
-      }
+    if (!user) {
+      throw new NotFoundException();
     }
 
-    return null;
+    let hash = user.password;
+    hash = hash.replace(/^\$2y(.+)$/i, '$2a$1');
+    const match = await bcrypt.compare(pass, hash);
+
+    if (!match) {
+      throw new UnauthorizedException();
+    }
+
+    const { password, ...result } = user;
+    
+    return result;
   }
 
   async login(user: any): Promise<any> {
