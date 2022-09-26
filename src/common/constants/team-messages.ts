@@ -5,6 +5,7 @@ export enum EmployeeMSG {
 
 export enum MemberMSG {
   FIND_ALL = 'findAllMember',
+  FIND_ALL_TEAM_ID = 'findAllTeamId',
   FIND_ONE = 'findOneMember'
 }
 

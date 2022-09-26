@@ -25,6 +25,11 @@ export class MemberController {
     return this.clientProxyTeam.send(MemberMSG.FIND_ALL, findParams);
   }
 
+  @Get('team/:teamId')
+  findAllByTeamId(@Param('teamId') teamId: string) {
+    return this.clientProxyTeam.send(MemberMSG.FIND_ALL_TEAM_ID, teamId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.clientProxyTeam.send(MemberMSG.FIND_ONE, id);
