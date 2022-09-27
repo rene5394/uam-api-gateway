@@ -18,6 +18,6 @@ export enum TeamMSG {
 export enum UserMSG {
   FIND_ALL =  'findAllUser',
   FIND_ALL_EMPLOYEES = 'findAllUserEmployee',
-  FIND_ALL_TEAM_ID = 'findAllUserTeamId',
+  FIND_ALL_EMPLOYEES_TEAM_ID = 'findAllUserEmployeeTeamId',
   FIND_ONE = 'findOneUser'
 }

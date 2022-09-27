@@ -28,21 +28,22 @@ export class UserController {
 
   @Get('employees')
   findAllEmployees(@Query() queryParams)  {
+    const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page) ? queryParams.page : '';
-    const findParams = { page, status };
+    const findParams = { text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
   }
 
   @Get('employees/team/:teamId')
-  findAllEmployeesByTeam(@Query() queryParams) {
-    const teamId = (queryParams.teamId) ? queryParams.teamId : '';
+  findAllEmployeesByTeam(@Param('teamId') teamId: number, @Query() queryParams) {
+    const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page) ? queryParams.page : '';
-    const findParams = { teamId, page, status };
+    const findParams = { teamId, text, page, status };
 
-    return this.clientProxyTeam.send(UserMSG.FIND_ALL_TEAM_ID, findParams);
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
   }
 
   @Get('/me')
