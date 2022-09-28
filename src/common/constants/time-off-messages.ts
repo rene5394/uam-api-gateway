@@ -4,6 +4,7 @@ export enum BalanceMSG {
     FIND_ONE = 'findOneBalance',
     FIND_ONE_USER_ID = 'findOneUserIdBalance',
     UPDATE = 'updateBalance',
+    UPDATE_USER_ID = 'updateUserIdBalance',
 }
 
 export enum BalanceTransactionMSG {

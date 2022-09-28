@@ -102,13 +102,15 @@ export class BalanceController {
    return balance;
   }
 
+  @Roles(Role.admin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBalanceDto: UpdateBalanceDto) {
-    return '';
+  update(@Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
+    return this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updateBalanceDto });
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return '';
+  @Roles(Role.admin)
+  @Patch('/user/:userId')
+  updateByUserId(@Param('id') userId: number, @Body() updateBalanceDto: UpdateBalanceDto) {
+    return this.clientProxyTimeOff.send(BalanceMSG.UPDATE_USER_ID, { userId, updateBalanceDto });
   }
 }
