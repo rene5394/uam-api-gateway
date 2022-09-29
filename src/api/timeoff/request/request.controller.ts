@@ -75,14 +75,26 @@ export class RequestController {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, userId);
   }
 
-  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Roles(Role.admin)
   @Get('year/:year/month/:month')
+  findRequestsByYearAndMonth(@Param() findParams) {
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_REQUEST_YEAR_AND_MONTH, findParams);
+  }
+
+  @Roles(Role.admin)
+  @Get('startDate/:startDate/endDate/:endDate')
+  findRequestsByDateRange(@Param() dateRange) {
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_REQUEST_DATE_RANGE, dateRange);
+  }
+
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('count/year/:year/month/:month')
   findNumberOfRequestsByYearAndMonth(@Param() findParams) {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_NUMBER_OF_REQUEST_YEAR_AND_MONTH, findParams);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
-  @Get('startDate/:startDate/endDate/:endDate')
+  @Get('count/startDate/:startDate/endDate/:endDate')
   findNumberOfRequestsByDateRange(@Param() dateRange) {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_NUMBER_OF_REQUEST_DATE_RANGE, dateRange);
   }
