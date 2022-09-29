@@ -19,5 +19,6 @@ export enum UserMSG {
   FIND_ALL =  'findAllUser',
   FIND_ALL_EMPLOYEES = 'findAllUserEmployee',
   FIND_ALL_EMPLOYEES_TEAM_ID = 'findAllUserEmployeeTeamId',
+  FIND_ALL_TEAM_EMPLOYEES_USER_ID = 'findAllTeamUserEmployeeUserId',
   FIND_ONE = 'findOneUser'
 }

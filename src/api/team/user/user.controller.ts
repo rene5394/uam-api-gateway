@@ -17,6 +17,7 @@ export class UserController {
 
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
+  @Roles(Role.admin)
   @Get()
   findAll(@Query() queryParams) {
     const status = (queryParams.status) ? queryParams.status : '';
@@ -26,6 +27,7 @@ export class UserController {
     return this.clientProxyTeam.send(UserMSG.FIND_ALL, findParams);
   }
 
+  @Roles(Role.admin)
   @Get('employees')
   findAllEmployees(@Query() queryParams)  {
     const text = (queryParams.text) ? queryParams.text : '';
@@ -36,6 +38,7 @@ export class UserController {
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
   }
 
+  @Roles(Role.admin)
   @Get('employees/team/:teamId')
   findAllEmployeesByTeam(@Param('teamId') teamId: number, @Query() queryParams) {
     const text = (queryParams.text) ? queryParams.text : '';
@@ -46,11 +49,25 @@ export class UserController {
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
   }
 
+  @Roles(Role.coach, Role.jrCoach)
+  @Get('employees/user/me')
+  findAllEmployeesByTeamJWT(@Auth() auth, @Query() queryParams) {
+    const userId = auth.userId;
+    const text = (queryParams.text) ? queryParams.text : '';
+    const status = (queryParams.status) ? queryParams.status : '';
+    const page = (queryParams.page) ? queryParams.page : '';
+    const findParams = { userId, text, page, status };
+
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
+  }
+
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('/me')
   findOneByUserJWT(@Auth() auth) {
     return this.clientProxyTeam.send(UserMSG.FIND_ONE, auth.userId);
   }
 
+  @Roles(Role.admin)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.clientProxyTeam.send(UserMSG.FIND_ONE, id);
