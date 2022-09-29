@@ -5,12 +5,12 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
-import { Observable } from 'rxjs';
 import { BalanceMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
+import { lastValueFrom, Observable } from 'rxjs';
 
 @ApiTags('Timeoff Balances')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -22,8 +22,15 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Post()
-  create(@Body() createBalanceDto: CreateBalanceDto): Observable<Balance> {
-    return this.clientProxyTimeOff.send(BalanceMSG.CREATE, createBalanceDto);
+  async create(@Body() createBalanceDto: CreateBalanceDto) {
+    try {
+      const balance = this.clientProxyTimeOff.send(BalanceMSG.CREATE, createBalanceDto);
+      const balanceFound = await lastValueFrom(balance);
+
+      return balanceFound;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Roles(Role.admin)
@@ -104,8 +111,15 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
-    return this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updateBalanceDto });
+  async update(@Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
+    try {
+      const balance = this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updateBalanceDto });
+      const balanceFound = await lastValueFrom(balance);
+
+      return balanceFound;
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Roles(Role.admin)
