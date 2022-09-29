@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, Min } from "class-validator";
+import { IsInt, IsOptional, Max, Min } from "class-validator";
 
 export class CreateBalanceDto {
   @IsInt()
@@ -8,10 +8,12 @@ export class CreateBalanceDto {
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(99)
   compDays: number;
 
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(99)
   vacationDays: number;
 }
