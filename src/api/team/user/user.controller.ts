@@ -30,10 +30,11 @@ export class UserController {
   @Roles(Role.admin)
   @Get('employees')
   findAllEmployees(@Query() queryParams)  {
+    const userIds = (queryParams.userIds) ? queryParams.userIds : '';
     const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page) ? queryParams.page : '';
-    const findParams = { text, page, status };
+    const findParams = { userIds, text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
   }
