@@ -33,7 +33,7 @@ export class BalanceController {
     }
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get()
   findAll(@Query() queryParams): Observable<Balance[]> {
     const userIds = (queryParams.userIds) ? queryParams.userIds : '';
