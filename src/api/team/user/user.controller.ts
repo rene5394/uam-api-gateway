@@ -59,7 +59,7 @@ export class UserController {
     const page = (queryParams.page) ? queryParams.page : '';
     const findParams = { userId, text, page, status };
 
-    return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
+    return this.clientProxyTeam.send(UserMSG.FIND_ALL_TEAM_EMPLOYEES_USER_ID, findParams);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
