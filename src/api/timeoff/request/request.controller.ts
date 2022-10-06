@@ -56,8 +56,14 @@ export class RequestController {
 
   @Roles(Role.admin)
   @Get()
-  findAll() {
-    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL, '');
+  findAll(@Query() queryParams) {
+    const status = (queryParams.status) ? queryParams.status : '';
+    const page = (queryParams.page) ? queryParams.page : '';
+    const startDate = (queryParams.startDate) ? queryParams.startDate : '';
+    const endDate = (queryParams.endDate) ? queryParams.endDate : '';
+    const findParams = { status, page, startDate, endDate };
+    
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL, findParams);
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
