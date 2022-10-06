@@ -21,7 +21,7 @@ export class UserController {
   @Get()
   findAll(@Query() queryParams) {
     const status = (queryParams.status) ? queryParams.status : '';
-    const page = (queryParams.page) ? queryParams.page : '';
+    const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
     const findParams = { page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL, findParams);
@@ -33,7 +33,7 @@ export class UserController {
     const userIds = (queryParams.userIds) ? queryParams.userIds : '';
     const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
-    const page = (queryParams.page) ? queryParams.page : '';
+    const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
     const findParams = { userIds, text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
@@ -44,7 +44,7 @@ export class UserController {
   findAllEmployeesByTeam(@Param('teamId') teamId: number, @Query() queryParams) {
     const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
-    const page = (queryParams.page) ? queryParams.page : '';
+    const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
     const findParams = { teamId, text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
@@ -56,7 +56,7 @@ export class UserController {
     const userId = auth.userId;
     const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
-    const page = (queryParams.page) ? queryParams.page : '';
+    const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
     const findParams = { userId, text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_TEAM_EMPLOYEES_USER_ID, findParams);
