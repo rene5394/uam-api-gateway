@@ -59,9 +59,10 @@ export class RequestController {
   findAll(@Query() queryParams) {
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
+    const userIds = (queryParams.userIds) ? queryParams.userIds : '';
     const startDate = (queryParams.startDate) ? queryParams.startDate : '';
     const endDate = (queryParams.endDate) ? queryParams.endDate : '';
-    const findParams = { status, page, startDate, endDate };
+    const findParams = { status, page, userIds, startDate, endDate };
     
     return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL, findParams);
   }
