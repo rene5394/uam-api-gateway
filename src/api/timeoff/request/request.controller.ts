@@ -54,7 +54,7 @@ export class RequestController {
     }
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get()
   findAll(@Query() queryParams) {
     const status = (queryParams.status) ? queryParams.status : '';
