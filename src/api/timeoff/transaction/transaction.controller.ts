@@ -19,10 +19,15 @@ export class TransactionController {
 
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto): Observable<Transaction> {
-    return this.clientProxyTimeOff.send(TransctionMSG.CREATE, createTransactionDto);
+  create(@Auth() auth, @Body() createTransactionDto: CreateTransactionDto): Observable<Transaction> {
+    const userId = auth.userId;
+    const roleId = auth.roleId;
+    const hr = auth.hr;
+    const createData = { userId, roleId, hr, createTransactionDto };
+
+    return this.clientProxyTimeOff.send(TransctionMSG.CREATE, createData);
   }
 
   @Roles(Role.admin)
