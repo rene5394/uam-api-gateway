@@ -22,10 +22,10 @@ export class TransactionController {
   @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Post()
   create(@Auth() auth, @Body() createTransactionDto: CreateTransactionDto): Observable<Transaction> {
-    const userId = auth.userId;
+    createTransactionDto.createdBy = auth.userId;
     const roleId = auth.roleId;
     const hr = auth.hr;
-    const createData = { userId, roleId, hr, createTransactionDto };
+    const createData = { roleId, hr, createTransactionDto };
 
     return this.clientProxyTimeOff.send(TransctionMSG.CREATE, createData);
   }
