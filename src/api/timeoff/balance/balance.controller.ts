@@ -111,9 +111,10 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
+  async update(@Auth() auth, @Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
     try {
-      const balance = this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updateBalanceDto });
+      const updatedBy = auth.userId;
+      const balance = this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updatedBy, updateBalanceDto });
       const balanceFound = await lastValueFrom(balance);
 
       return balanceFound;
