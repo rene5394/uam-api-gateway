@@ -78,8 +78,11 @@ export class RequestController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Get('user/:userId')
-  findAllByUserId(@Param('userId') userId: number) {
-    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, userId);
+  findAllByUserId(@Param('userId') userId: number, @Query('status') statusQuery) {
+    const status = (statusQuery) ? statusQuery : '';
+    const findParams = { userId, status };
+
+    return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, findParams);
   }
 
   @Roles(Role.admin)
