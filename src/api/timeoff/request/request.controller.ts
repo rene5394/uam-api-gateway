@@ -85,13 +85,13 @@ export class RequestController {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_ALL_USER_ID, findParams);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get('year/:year/month/:month')
   findRequestsByYearAndMonth(@Param() findParams) {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_REQUEST_YEAR_AND_MONTH, findParams);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get('startDate/:startDate/endDate/:endDate')
   findRequestsByDateRange(@Param() dateRange) {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_REQUEST_DATE_RANGE, dateRange);
