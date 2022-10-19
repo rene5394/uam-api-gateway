@@ -109,7 +109,7 @@ export class RequestController {
     return this.clientProxyTimeOff.send(RequestMSG.FIND_NUMBER_OF_REQUEST_DATE_RANGE, dateRange);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get(':id')
   async findOne(@Param('id') id: number) {
     const request = this.clientProxyTimeOff.send(RequestMSG.FIND_ONE, id);
