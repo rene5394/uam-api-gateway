@@ -20,4 +20,13 @@ export class CreateRequestDto {
 
     @IsDateString()
     endDate: Date;
+
+    @IsOptional()
+    roleId: number;
+
+    @IsInt()
+    @Min(0)
+    @Max(1)
+    @IsOptional()
+    coachApproval: number;
 }

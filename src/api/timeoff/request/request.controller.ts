@@ -8,9 +8,9 @@ import { Role } from '../../../common/enums/role.enum';
 import { RequestMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateRequestDto } from './dto/create-request.dto';
-import { CreateRequestMeDto } from './dto/create-request-me.dto';
 import { Hrs } from 'src/common/decorators/hr.decorator';
 import { lastValueFrom, Observable } from 'rxjs';
+import { UserMSG } from 'src/common/constants/team-messages';
 
 @ApiTags('Timeoff Requests')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -19,6 +19,7 @@ export class RequestController {
   constructor(private readonly clientProxy: ClientProxies) {}
 
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
+  private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
   @Roles(Role.admin)
   @Post()
@@ -26,30 +27,38 @@ export class RequestController {
     createRequestDto.createdBy = auth.userId;
 
     try {
+      const user = this.clientProxyTeam.send(UserMSG.FIND_ONE, createRequestDto.userId);
+      const userFound  = await lastValueFrom(user);      
+
+      if (!userFound) {
+        throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+      }
+
+      createRequestDto.roleId = userFound.role_id;
+      createRequestDto.coachApproval = 1;
       const request = this.clientProxyTimeOff.send(RequestMSG.CREATE, createRequestDto);
       const requestFound = await lastValueFrom(request);
       
       return requestFound;
     } catch (err) {
-
-      throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post('/user/me')
-  async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto): Promise<Observable<Request>> {
-    createRequestMeDto.userId = auth.userId;
-    createRequestMeDto.createdBy = auth.userId;
-    createRequestMeDto.roleId = auth.roleId;
+  async createByUserJWT(@Auth() auth, @Body() createRequestDto: CreateRequestDto): Promise<Observable<Request>> {
+    createRequestDto.userId = auth.userId;
+    createRequestDto.createdBy = auth.userId;
+    createRequestDto.roleId = auth.roleId;
+    createRequestDto.coachApproval = 0;
 
     try {
-      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
+      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestDto);
       const requestFound = await lastValueFrom(request);
       
       return requestFound;
     } catch (err) {
-      
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
