@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, UseGuards, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators/auth.decorator';
+import { Hrs } from 'src/common/decorators/hr.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
@@ -8,7 +9,7 @@ import { Role } from '../../../common/enums/role.enum';
 import { RequestMSG } from 'src/common/constants/time-off-messages';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateRequestDto } from './dto/create-request.dto';
-import { Hrs } from 'src/common/decorators/hr.decorator';
+import { CreateRequestMeDto } from './dto/create-request-me.dto';
 import { lastValueFrom, Observable } from 'rxjs';
 import { UserMSG } from 'src/common/constants/team-messages';
 
@@ -47,14 +48,14 @@ export class RequestController {
 
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post('/user/me')
-  async createByUserJWT(@Auth() auth, @Body() createRequestDto: CreateRequestDto): Promise<Observable<Request>> {
-    createRequestDto.userId = auth.userId;
-    createRequestDto.createdBy = auth.userId;
-    createRequestDto.roleId = auth.roleId;
-    createRequestDto.coachApproval = 0;
+  async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto): Promise<Observable<Request>> {
+    createRequestMeDto.userId = auth.userId;
+    createRequestMeDto.createdBy = auth.userId;
+    createRequestMeDto.roleId = auth.roleId;
+    createRequestMeDto.coachApproval = 0;
 
     try {
-      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestDto);
+      const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
       const requestFound = await lastValueFrom(request);
       
       return requestFound;
