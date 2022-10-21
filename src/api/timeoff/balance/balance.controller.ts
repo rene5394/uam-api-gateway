@@ -43,7 +43,7 @@ export class BalanceController {
     return this.clientProxyTimeOff.send(BalanceMSG.FIND_ALL, findParams);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Observable<Balance>> {
     const balance = this.clientProxyTimeOff.send(BalanceMSG.FIND_ONE, id);
@@ -87,7 +87,7 @@ export class BalanceController {
     return balance;
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get('/user/:userId')
   async findOneByUserId(@Param('userId') userId: number): Promise<Observable<Balance>> {
     const balance = this.clientProxyTimeOff.send(BalanceMSG.FIND_ONE_USER_ID, userId);
