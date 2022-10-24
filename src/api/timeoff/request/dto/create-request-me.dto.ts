@@ -1,10 +1,14 @@
-import { IsDateString, IsInt, IsOptional, Max, Min } from "@nestjs/class-validator";
+import { IsDateString, IsInt, IsOptional, Max, MaxLength, Min } from "@nestjs/class-validator";
 
 export class CreateRequestMeDto {
     @IsInt()
     @Min(1)
     @IsOptional()
     userId: number;
+
+    @MaxLength(300)
+    @IsOptional()
+    comment: string;
 
     @IsInt()
     @Min(1)
