@@ -68,7 +68,7 @@ export class UserController {
     return this.clientProxyTeam.send(UserMSG.FIND_ONE, auth.userId);
   }
 
-  @Roles(Role.admin)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.clientProxyTeam.send(UserMSG.FIND_ONE, id);
