@@ -50,7 +50,7 @@ export class UserController {
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_TEAM_ID, findParams);
   }
 
-  @Roles(Role.coach, Role.jrCoach)
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
   @Get('employees/user/me')
   findAllEmployeesByTeamJWT(@Auth() auth, @Query() queryParams) {
     const userId = auth.userId;
