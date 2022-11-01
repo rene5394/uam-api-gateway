@@ -3,6 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { EntryMSG } from 'src/common/constants/attendance-messages';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
+import { CreateEntriesDto } from './dto/create-entries.dto';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
 
@@ -16,6 +17,12 @@ export class EntryController {
   @Post()
   create(@Body() createEntryDto: CreateEntryDto) {
     return this.clientProxyAttendance.send(EntryMSG.CREATE, createEntryDto);
+  }
+
+
+  @Post('bulk')
+  createBulk(@Body() createEntryDto: CreateEntriesDto) {
+    return this.clientProxyAttendance.send(EntryMSG.CREATE_BULK, createEntryDto);
   }
 
   @Get()

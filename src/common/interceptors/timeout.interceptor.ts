@@ -6,8 +6,6 @@ import { catchError, timeout } from 'rxjs/operators';
 export class TimeOutInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<any>)
   : Observable<any> | Promise<Observable<any>> {
-    console.log('This is an interceptor if TIMEOUT SS');
-    
     return next.handle().pipe(
       timeout(30000),
       catchError(err => {
