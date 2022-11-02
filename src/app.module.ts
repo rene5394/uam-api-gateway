@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BalanceModule } from './api/timeoff/balance/balance.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { EntrieModule } from './api/attendance/entry/entry.module';
 import { StatusModule as AttendanceStatusModule } from './api/attendance/status/status.module';
 import { AuthModule } from './auth/auth.module';
@@ -32,6 +33,7 @@ import { MemberModule } from './api/team/member/member.module';
     autoLoadEntities: true,
     synchronize: false
   }),
+  ScheduleModule.forRoot(),
   AttendanceStatusModule,
   AuthModule,
   BalanceModule,
