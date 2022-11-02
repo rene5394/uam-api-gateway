@@ -32,4 +32,9 @@ export class TeamController {
   findOneByUserJWT(@Auth() auth) {
     return this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, auth.userId);
   }
+
+  @Get('/coach/me')
+  findOneByCoachUserJWT(@Auth() auth) {
+    return this.clientProxyTeam.send(TeamMSG.FIND_ONE_BY_COACH_USER_ID, auth.userId);
+  }
 }
