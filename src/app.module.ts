@@ -16,6 +16,8 @@ import { TransactionModule } from './api/timeoff/transaction/transaction.module'
 import { TransactionStatusModule } from './api/timeoff/transaction-status/transaction-status.module';
 import { EmployeeModule } from './api/team/employee/employee.module';
 import { MemberModule } from './api/team/member/member.module';
+import { AppService } from './app.service';
+import { ProxyModule } from './common/proxy/proxy.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -47,6 +49,8 @@ import { MemberModule } from './api/team/member/member.module';
   UserModule,
   RequestModule,
   TransactionModule,
-  TransactionStatusModule]
+  TransactionStatusModule,
+  ProxyModule],
+  providers: [AppService]
 })
 export class AppModule {}

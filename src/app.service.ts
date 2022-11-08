@@ -1,0 +1,81 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
+import { lastValueFrom } from 'rxjs';
+import { User } from './api/team/user/entities/user.entity';
+import { Balance } from './api/timeoff/balance/entities/balance.entity';
+import { UserMSG } from './common/constants/team-messages';
+import { BalanceMSG, BalanceTransactionMSG } from './common/constants/time-off-messages';
+import { BalanceOperation } from './common/enums/balanceOperation.enum';
+import { RequestType } from './common/enums/requestType.enum';
+import { ClientProxies } from './common/proxy/client-proxies';
+
+@Injectable()
+export class AppService {
+  constructor(private readonly clientProxy: ClientProxies) {}
+
+  private readonly logger = new Logger();
+  private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
+  private clientProxyTeam = this.clientProxy.clientProxyTeam();
+
+  @Cron('0 40 0 * * *')
+  async yearlyVacation(): Promise<any> {
+    this.logger.debug('Called when the current second is 45');
+
+    try {
+      const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_HIRE_DATE, "");
+      const usersFound = await lastValueFrom(users);
+
+      if (usersFound) {
+        const userIds: any = [];
+        usersFound.map((user: User) => userIds.push(user.id));
+
+        const createBulkVacationTransactionDto = {
+          userIds,
+          typeId: RequestType.vacation,
+          operation: BalanceOperation.addition,
+          amount: 8,
+          updatedBy: 1
+        }
+
+        const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
+        const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+
+        return balanceTransactionCreated;
+      }
+      
+      throw new Error("Invalid");
+    } catch (err) {
+      
+    }
+  }
+
+  @Cron('0 50 0 * * *')
+  async sixMonthVacation(): Promise<any> {
+    try {
+      const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_SEMESTER_HIRE_DATE, "");
+      const usersFound = await lastValueFrom(users);
+
+      if (usersFound) {
+        const userIds: any = [];
+        usersFound.map((user: User) => userIds.push(user.id));
+
+        const createBulkVacationTransactionDto = {
+          userIds,
+          typeId: RequestType.vacation,
+          operation: BalanceOperation.addition,
+          amount: 7,
+          updatedBy: 1
+        }
+
+        const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
+        const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+
+        return balanceTransactionCreated;
+      }
+
+      throw new Error("Invalid");
+    } catch (err) {
+      
+    }
+  }
+}
