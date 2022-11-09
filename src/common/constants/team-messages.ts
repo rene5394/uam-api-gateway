@@ -1,6 +1,7 @@
 export enum EmployeeMSG {
   FIND_ALL = 'findAllEmployee',
-  FIND_ONE = 'findOneEmployee'
+  FIND_ONE = 'findOneEmployee',
+  FIND_ONE_USER_ID = 'findOneEmployeeUserId'
 }
 
 export enum MemberMSG {
