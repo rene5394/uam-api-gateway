@@ -50,7 +50,7 @@ export class TransactionController {
           throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
         }
   
-        const employee = this.clientProxyTeam.send(EmployeeMSG.FIND_ONE, requestFound.userId);
+        const employee = this.clientProxyTeam.send(EmployeeMSG.FIND_ONE_USER_ID, requestFound.userId);
         const employeeFound = await lastValueFrom(employee);
   
         if (!employeeFound) {
