@@ -17,10 +17,8 @@ export class AppService {
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
-  @Cron('0 40 0 * * *')
+  @Cron('0 40 12 * * *')
   async yearlyVacation(): Promise<any> {
-    this.logger.debug('Called when the current second is 45');
-
     try {
       const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_HIRE_DATE, "");
       const usersFound = await lastValueFrom(users);
@@ -49,7 +47,7 @@ export class AppService {
     }
   }
 
-  @Cron('0 50 0 * * *')
+  @Cron('0 45 12 * * *')
   async sixMonthVacation(): Promise<any> {
     try {
       const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_SEMESTER_HIRE_DATE, "");
