@@ -18,6 +18,7 @@ import { EmployeeModule } from './api/team/employee/employee.module';
 import { MemberModule } from './api/team/member/member.module';
 import { AppService } from './app.service';
 import { ProxyModule } from './common/proxy/proxy.module';
+import { EmailService } from './api/email/email.service';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -51,6 +52,6 @@ import { ProxyModule } from './common/proxy/proxy.module';
   TransactionModule,
   TransactionStatusModule,
   ProxyModule],
-  providers: [AppService]
+  providers: [AppService, EmailService]
 })
 export class AppModule {}
