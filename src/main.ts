@@ -4,10 +4,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TimeOutInterceptor } from './common/interceptors/timeout.interceptor';
 import * as cookieParser from 'cookie-parser';
+import { config as configRxjs } from 'rxjs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
   const corsOrigins = process.env.CORS_DOMAIN.split(' ');
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin : corsOrigins,
     credentials: true
@@ -17,6 +18,8 @@ async function bootstrap() {
   }));
   app.useGlobalInterceptors(new TimeOutInterceptor);
   app.use(cookieParser());
+
+  configRxjs.onUnhandledError = (err: any) => console.error(err.message);
 
   const config = new DocumentBuilder()
     .setTitle('UAM API Documentation')
