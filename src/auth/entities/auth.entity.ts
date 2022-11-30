@@ -6,6 +6,15 @@ export class Auth {
     id: number;
 
     @Column({ type: 'varchar', nullable: false })
+    firstname: string;
+
+    @Column({ type: 'varchar', nullable: false })
+    secondname: string;
+
+    @Column({ type: 'varchar', nullable: false })
+    lastname: string;
+
+    @Column({ type: 'varchar', nullable: false })
     email: string;
 
     @Column({ type: 'varchar', nullable: false })
