@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { UnpluggedMSG } from 'src/common/constants/email-messages';
-import { TeamMSG } from 'src/common/constants/team-messages';
+import { SupportTeamMemberMSG, TeamMSG, UserMSG } from 'src/common/constants/team-messages';
 import { Role } from 'src/common/enums/role.enum';
+import { SupportTeam } from 'src/common/enums/supportTeams.enum';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
+import { SupportTeamMember } from '../team/support-team-member/entities/support-team-member.entity';
+import { User } from '../team/user/entities/user.entity';
 
 @Injectable()
 export class EmailService {
@@ -12,23 +15,78 @@ export class EmailService {
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
   private clientProxyEmail = this.clientProxy.clientProxyEmail();
 
-  async createRequestEmail(emailData: any) {
-    if (emailData.roleId === Role.admin || emailData.roleId === Role.coach) {
-      emailData.hrEmails = ['ale@uassistme.com', 'georgina@uassistme.com'];
+  async requestCreatedByUser(emailData: any) {
+    if (emailData.user.roleId === Role.admin || emailData.user.roleId === Role.coach) {
+      const findParamsSupportTeamMembers = { supportTeamId: SupportTeam.HR, status: 'active' };
+      const supportTeamMembers = this.clientProxyTeam.send(SupportTeamMemberMSG.FIND_ALL_SUPPORT_TEAM_ID, findParamsSupportTeamMembers);
+      const supportTeamMembersFound = await lastValueFrom(supportTeamMembers);
+
+      const employeeIds: any = [];
+      supportTeamMembersFound.map((supportTeamMember: SupportTeamMember) => employeeIds.push(supportTeamMember.employee_id));
+      const findParamsUsers = { employeeIds };
+
+      const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParamsUsers);
+      const { list: usersFound }  = await lastValueFrom(users);
+
+      const hrEmails: any = [];
+      usersFound.map((user: User) => hrEmails.push(user.email));
+      emailData.hrEmails = hrEmails;
       
       const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
       const emailSent = await lastValueFrom(email);
-    } if (emailData.roleId === Role.jrCoach) {
-      const team =  this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, '');
+    } if (emailData.user.roleId === Role.jrCoach) {
+      const findParamsSupportTeamMembers = { supportTeamId: SupportTeam.HR, status: 'active' };
+      const supportTeamMembers = this.clientProxyTeam.send(SupportTeamMemberMSG.FIND_ALL_SUPPORT_TEAM_ID, findParamsSupportTeamMembers);
+      const supportTeamMembersFound = await lastValueFrom(supportTeamMembers);
+
+      const employeeIds: any = [];
+      supportTeamMembersFound.map((supportTeamMember: SupportTeamMember) => employeeIds.push(supportTeamMember.employee_id));
+      const findParamsUsers = { employeeIds };
+
+      const hrUsers = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParamsUsers);
+      const { list: hrUsersFound }  = await lastValueFrom(hrUsers);
+
+      const hrEmails: any = [];
+      hrUsersFound.map((user: User) => hrEmails.push(user.email));
+      emailData.hrEmails = hrEmails;
+
+      const team =  this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, emailData.request.userId);
+      const teamFound = await lastValueFrom(team);
+      
+      const coachUser = this.clientProxyTeam.send(UserMSG.FIND_ONE_EMPLOYEE_ID, teamFound.employee_id);
+      const coachUserFound = await lastValueFrom(coachUser);
+
+      emailData.coachEmail = coachUserFound.email;
+
+      const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
+      const emailSent = await lastValueFrom(email);
+    } if (emailData.user.roleId === Role.va) {
+      const team =  this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, emailData.request.userId);
       const teamFound = await lastValueFrom(team);
 
-      emailData.hrEmails = ['ale@uassistme.com', 'georgina@uassistme.com'];
-      emailData.coachEmail = 'walterc@uassistme.com';
-    } if (emailData.roleId === Role.va) {
-      const team =  this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, '');
-      const teamFound = await lastValueFrom(team);
+      const coachUser = this.clientProxyTeam.send(UserMSG.FIND_ONE_EMPLOYEE_ID, teamFound.employee_id);
+      const coachUserFound = await lastValueFrom(coachUser);
 
-      emailData.coachEmail = 'walterc@uassistme.com';
+      emailData.coachEmail = coachUserFound.email;
+
+      const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
+      const emailSent = await lastValueFrom(email);
+    }
+  }
+
+  async requestCreatedByHr(emailData: any) {
+    if (emailData.user.roleId === Role.admin || emailData.user.roleId === Role.coach) {      
+      const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
+      const emailSent = await lastValueFrom(email);
+    } if (emailData.user.roleId === Role.jrCoach || emailData.user.roleId === Role.va) {
+      const team =  this.clientProxyTeam.send(TeamMSG.FIND_ONE_USER_ID, emailData.request.userId);
+      const teamFound = await lastValueFrom(team);
+      
+      const coachUser = this.clientProxyTeam.send(UserMSG.FIND_ONE_EMPLOYEE_ID, teamFound.employee_id);
+      const coachUserFound = await lastValueFrom(coachUser);
+
+      emailData.coachEmail = coachUserFound.email;
+
       const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
       const emailSent = await lastValueFrom(email);
     }
