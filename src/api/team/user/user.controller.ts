@@ -31,10 +31,11 @@ export class UserController {
   @Get('employees')
   findAllEmployees(@Query() queryParams)  {
     const userIds = (queryParams.userIds) ? queryParams.userIds : '';
+    const employeeIds = (queryParams.employeeIds) ? queryParams.employeeIds : '';
     const text = (queryParams.text) ? queryParams.text : '';
     const status = (queryParams.status) ? queryParams.status : '';
     const page = (queryParams.page && queryParams.page > 0) ? queryParams.page : '';
-    const findParams = { userIds, text, page, status };
+    const findParams = { userIds, employeeIds, text, page, status };
 
     return this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParams);
   }
@@ -72,5 +73,11 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.clientProxyTeam.send(UserMSG.FIND_ONE, id);
+  }
+
+  @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
+  @Get('/employee/:employeeId')
+  findOneByEmployeeId(@Param('employeeId') employeeId: number) {
+    return this.clientProxyTeam.send(UserMSG.FIND_ONE_EMPLOYEE_ID, employeeId);
   }
 }
