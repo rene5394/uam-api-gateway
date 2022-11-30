@@ -18,61 +18,69 @@ export class AppService {
 
   @Cron('0 40 12 * * *')
   async yearlyVacation(): Promise<any> {
-    try {
-      const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_HIRE_DATE, "");
-      const usersFound = await lastValueFrom(users);
-
-      if (usersFound) {
-        const userIds: any = [];
-        usersFound.map((user: User) => userIds.push(user.id));
-
-        const createBulkVacationTransactionDto = {
-          userIds,
-          typeId: RequestType.vacation,
-          operation: BalanceOperation.addition,
-          amount: 8,
-          updatedBy: 1
+    if (process.env.VACATION_CRONJOBS === 'true' ) {
+      try {
+        const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_HIRE_DATE, "");
+        const usersFound = await lastValueFrom(users);
+  
+        if (usersFound) {
+          const userIds: any = [];
+          usersFound.map((user: User) => userIds.push(user.id));
+  
+          const createBulkVacationTransactionDto = {
+            userIds,
+            typeId: RequestType.vacation,
+            operation: BalanceOperation.addition,
+            amount: 8,
+            updatedBy: 1
+          }
+  
+          const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
+          const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+  
+          return balanceTransactionCreated;
         }
-
-        const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
-        const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
-
-        return balanceTransactionCreated;
+        
+        throw new Error('No users found');
+      } catch (err) {
+        throw new Error(err.message);
       }
-      
-      throw new Error("Invalid");
-    } catch (err) {
-      
     }
+
+    throw new Error('Cron job deactivated');
   }
 
   @Cron('0 45 12 * * *')
   async sixMonthVacation(): Promise<any> {
-    try {
-      const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_SEMESTER_HIRE_DATE, "");
-      const usersFound = await lastValueFrom(users);
+    if (process.env.VACATION_CRONJOBS === 'true' ) {
+      try {
+        const users = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES_SEMESTER_HIRE_DATE, "");
+        const usersFound = await lastValueFrom(users);
 
-      if (usersFound) {
-        const userIds: any = [];
-        usersFound.map((user: User) => userIds.push(user.id));
+        if (usersFound) {
+          const userIds: any = [];
+          usersFound.map((user: User) => userIds.push(user.id));
 
-        const createBulkVacationTransactionDto = {
-          userIds,
-          typeId: RequestType.vacation,
-          operation: BalanceOperation.addition,
-          amount: 7,
-          updatedBy: 1
+          const createBulkVacationTransactionDto = {
+            userIds,
+            typeId: RequestType.vacation,
+            operation: BalanceOperation.addition,
+            amount: 7,
+            updatedBy: 1
+          }
+
+          const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
+          const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+
+          return balanceTransactionCreated;
         }
 
-        const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
-        const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
-
-        return balanceTransactionCreated;
+        throw new Error('No users found');
+      } catch (err) {
+        throw new Error(err.message);
       }
-
-      throw new Error("Invalid");
-    } catch (err) {
-      
     }
+
+    throw new Error('Cron job deactivated');
   }
 }
