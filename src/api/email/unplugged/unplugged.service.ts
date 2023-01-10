@@ -5,11 +5,11 @@ import { SupportTeamMemberMSG, TeamMSG, UserMSG } from 'src/common/constants/tea
 import { Role } from 'src/common/enums/role.enum';
 import { SupportTeam } from 'src/common/enums/supportTeams.enum';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
-import { SupportTeamMember } from '../team/support-team-member/entities/support-team-member.entity';
-import { User } from '../team/user/entities/user.entity';
+import { SupportTeamMember } from '../../team/support-team-member/entities/support-team-member.entity';
+import { User } from '../../team/user/entities/user.entity';
 
 @Injectable()
-export class EmailService {
+export class UnpluggedService {
   constructor(private readonly clientProxy: ClientProxies) {}
 
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
@@ -87,7 +87,7 @@ export class EmailService {
 
       emailData.coachEmail = coachUserFound.email;
 
-      const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
+      const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_HR_EMAIL, emailData);
       const emailSent = await lastValueFrom(email);
     }
   }

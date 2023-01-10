@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { EmailModule } from 'src/api/email/email.module';
+import { UnpluggedModule } from 'src/api/email/unplugged/unplugged.module';
 import { ProxyModule } from 'src/common/proxy/proxy.module';
 import { RequestController } from './request.controller';
 
 @Module({
-  imports: [ProxyModule, EmailModule],
+  imports: [ProxyModule, UnpluggedModule],
   controllers: [RequestController]
 })
 export class RequestModule {}

@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
-import { EmailService } from 'src/api/email/email.service';
+import { UnpluggedService } from 'src/api/email/unplugged/unplugged.service';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { CreateRequestMeDto } from './dto/create-request-me.dto';
@@ -20,7 +20,7 @@ import { UserMSG } from 'src/common/constants/team-messages';
 export class RequestController {
   constructor(
     private readonly clientProxy: ClientProxies,
-    private readonly emailService: EmailService
+    private readonly emailService: UnpluggedService
   ) {}
 
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
@@ -65,7 +65,7 @@ export class RequestController {
         request: requestCreated
       }
 
-      //this.emailService.requestCreatedByHr(emailData);
+      this.emailService.requestCreatedByHr(emailData);
     
     return requestCreated;
   }
@@ -96,7 +96,7 @@ export class RequestController {
       request: requestCreated
     }
 
-    //this.emailService.requestCreatedByUser(emailData);
+    this.emailService.requestCreatedByUser(emailData);
     
     return requestCreated;
   }
