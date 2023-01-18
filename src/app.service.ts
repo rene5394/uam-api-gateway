@@ -7,16 +7,20 @@ import { BalanceTransactionMSG } from './common/constants/time-off-messages';
 import { BalanceOperation } from './common/enums/balanceOperation.enum';
 import { RequestType } from './common/enums/requestType.enum';
 import { ClientProxies } from './common/proxy/client-proxies';
+import { UnpluggedService } from 'src/api/email/unplugged/unplugged.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly clientProxy: ClientProxies) {}
+  constructor(
+    private readonly clientProxy: ClientProxies,
+    private readonly emailService: UnpluggedService
+  ) {}
 
   private readonly logger = new Logger();
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
   private clientProxyTeam = this.clientProxy.clientProxyTeam();
 
-  @Cron('0 40 12 * * *')
+  @Cron('0 45 0 * * *')
   async yearlyVacation(): Promise<any> {
     if (process.env.VACATION_CRONJOBS === 'true' ) {
       try {
@@ -37,6 +41,15 @@ export class AppService {
   
           const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
           const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+
+          const emailData = {
+            users: usersFound,
+            vacationDays: 8
+          }
+          console.log('First step');
+          
+
+          this.emailService.balanceUpdatedBySystem(emailData);
   
           return balanceTransactionCreated;
         }
@@ -50,7 +63,7 @@ export class AppService {
     throw new Error('Cron job deactivated');
   }
 
-  @Cron('0 45 12 * * *')
+  @Cron('0 50 0 * * *')
   async sixMonthVacation(): Promise<any> {
     if (process.env.VACATION_CRONJOBS === 'true' ) {
       try {
@@ -71,6 +84,13 @@ export class AppService {
 
           const balanceTransactions = this.clientProxyTimeOff.send(BalanceTransactionMSG.CREATE_BULK_VACATION, createBulkVacationTransactionDto);
           const balanceTransactionCreated = await lastValueFrom(balanceTransactions);
+
+          const emailData = {
+            users: usersFound,
+            vacationDays: 7,
+          }
+
+          this.emailService.balanceUpdatedBySystem(emailData);
 
           return balanceTransactionCreated;
         }

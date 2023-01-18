@@ -6,18 +6,24 @@ import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { Roles } from '../../../common/decorators/role.decorator';
 import { Role } from '../../../common/enums/role.enum';
 import { BalanceMSG } from 'src/common/constants/time-off-messages';
+import { UnpluggedService } from 'src/api/email/unplugged/unplugged.service';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { CreateBalanceDto } from './dto/create-balance.dto';
 import { UpdateBalanceDto } from './dto/update-balance.dto';
 import { Balance } from './entities/balance.entity';
 import { lastValueFrom, Observable } from 'rxjs';
+import { UserMSG } from 'src/common/constants/team-messages';
 
 @ApiTags('Timeoff Balances')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('v1/timeoff/balances')
 export class BalanceController {
-  constructor(private readonly clientProxy: ClientProxies) {}
+  constructor(
+    private readonly clientProxy: ClientProxies,
+    private readonly emailService: UnpluggedService
+  ) {}
 
+  private clientProxyTeam = this.clientProxy.clientProxyTeam();
   private clientProxyTimeOff = this.clientProxy.clientProxyTimeOff();
 
   @Roles(Role.admin)
@@ -111,11 +117,24 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Patch(':id')
-  async update(@Auth() auth, @Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
+  async update(@Auth() auth, @Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {    
     try {
       const updatedBy = auth.userId;
       const balance = this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updatedBy, updateBalanceDto });
       const balanceFound = await lastValueFrom(balance);
+
+      if (!balanceFound) {
+        throw new HttpException('BAD_REQUEST', HttpStatus.BAD_REQUEST);
+      }
+
+      const user = this.clientProxyTeam.send(UserMSG.FIND_ONE, balanceFound.userId);
+      const userFound  = await lastValueFrom(user);
+
+      const emailData = {
+        user: userFound        
+      }
+
+      this.emailService.balanceUpdatedByHR(emailData);
 
       return balanceFound;
     } catch (err) {
