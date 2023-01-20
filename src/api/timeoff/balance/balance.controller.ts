@@ -28,7 +28,7 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Post()
-  async create(@Body() createBalanceDto: CreateBalanceDto) {
+  async create(@Body() createBalanceDto: CreateBalanceDto) {    
     try {
       const balance = this.clientProxyTimeOff.send(BalanceMSG.CREATE, createBalanceDto);
       const balanceFound = await lastValueFrom(balance);
@@ -117,7 +117,7 @@ export class BalanceController {
 
   @Roles(Role.admin)
   @Patch(':id')
-  async update(@Auth() auth, @Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {    
+  async update(@Auth() auth, @Param('id') id: number, @Body() updateBalanceDto: UpdateBalanceDto) {
     try {
       const updatedBy = auth.userId;
       const balance = this.clientProxyTimeOff.send(BalanceMSG.UPDATE, { id, updatedBy, updateBalanceDto });
@@ -133,8 +133,6 @@ export class BalanceController {
       const emailData = {
         user: userFound        
       }
-
-      this.emailService.balanceUpdatedByHR(emailData);
 
       return balanceFound;
     } catch (err) {
