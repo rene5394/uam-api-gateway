@@ -17,7 +17,8 @@ export enum BalanceTransactionMSG {
 
 export enum RequestMSG {
     CREATE = 'createRequest',
-    CREATE_USER_ID = 'createUserIdRequest',
+    CREATE_COACH = 'createCoachRequest',
+    CREATE_USER = 'createUserRequest',
     FIND_ALL = 'findAllRequest',
     FIND_ALL_USER_ID = 'findAllUserIdRequest',
     FIND_REQUEST_YEAR_AND_MONTH = 'findRequestByYearAndMonth',

@@ -70,6 +70,50 @@ export class RequestController {
     return requestCreated;
   }
 
+  @Roles(Role.admin, Role.coach, Role.jrCoach)
+  @Post('/user/coach')
+  async createByCoach(@Auth() auth, @Body() createRequestDto: CreateRequestDto) {
+    createRequestDto.createdBy = auth.userId;
+
+    const user = this.clientProxyTeam.send(UserMSG.FIND_ONE, createRequestDto.userId);
+    const userFound  = await lastValueFrom(user)
+      .then((value: any) => {
+        return value;
+      })
+      .catch((e) => {
+        throw new HttpException(e, HttpStatus.BAD_REQUEST);
+      });
+
+    if (!userFound) {
+      throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+    }
+
+    createRequestDto.roleId = userFound.role_id;
+    createRequestDto.coachApproval = 1;
+
+    const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_COACH, createRequestDto);
+    const requestCreated = await lastValueFrom(request)
+      .then((value: any) => {
+        return value;
+      })
+      .catch((e) => {
+        throw new HttpException(e, HttpStatus.BAD_REQUEST);
+      });
+
+      if (!requestCreated) {
+        throw new HttpException('CONFLICT', HttpStatus.CONFLICT);
+      }
+
+      const emailData = {
+        user: userFound,
+        request: requestCreated
+      }
+
+      this.emailService.requestCreatedByCoach(emailData);
+    
+    return requestCreated;
+  }
+
   @Roles(Role.admin, Role.coach, Role.jrCoach, Role.va)
   @Post('/user/me')
   async createByUserJWT(@Auth() auth, @Body() createRequestMeDto: CreateRequestMeDto): Promise<Observable<Request>> {
@@ -78,7 +122,7 @@ export class RequestController {
     createRequestMeDto.roleId = auth.roleId;
     createRequestMeDto.coachApproval = 0;
 
-    const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER_ID, createRequestMeDto);
+    const request = this.clientProxyTimeOff.send(RequestMSG.CREATE_USER, createRequestMeDto);
     const requestCreated = await lastValueFrom(request)
       .then((value: any) => {
         return value;

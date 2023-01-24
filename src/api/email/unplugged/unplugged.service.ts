@@ -3,7 +3,6 @@ import { lastValueFrom } from 'rxjs';
 import { UnpluggedMSG } from 'src/common/constants/email-messages';
 import { SupportTeamMemberMSG, TeamMSG, UserMSG } from 'src/common/constants/team-messages';
 import { Role } from 'src/common/enums/role.enum';
-import { RequestType } from '../../../common/enums/requestType.enum';
 import { SupportTeam } from 'src/common/enums/supportTeams.enum';
 import { ClientProxies } from 'src/common/proxy/client-proxies';
 import { SupportTeamMember } from '../../team/support-team-member/entities/support-team-member.entity';
@@ -88,6 +87,35 @@ export class UnpluggedService {
     }
 
     const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_USER_EMAIL, emailData);
+    const emailSent = await lastValueFrom(email);
+  }
+
+  async requestCreatedByCoach(emailData: any) {
+    const types = this.clientProxyTimeOff.send(TypeMSG.FIND_ALL, '');
+    const typeFound = await lastValueFrom(types);
+
+    typeFound.forEach(async type => {
+      if (emailData.request.typeId == type.id) {
+        emailData.requestType = type.name;
+      }
+    });
+
+    const findParamsSupportTeamMembers = { supportTeamId: SupportTeam.HR, status: 'active' };
+    const supportTeamMembers = this.clientProxyTeam.send(SupportTeamMemberMSG.FIND_ALL_SUPPORT_TEAM_ID, findParamsSupportTeamMembers);
+    const supportTeamMembersFound = await lastValueFrom(supportTeamMembers);
+
+    const employeeIds: any = [];
+    supportTeamMembersFound.map((supportTeamMember: SupportTeamMember) => employeeIds.push(supportTeamMember.employee_id));
+    const findParamsUsers = { employeeIds };
+
+    const hrUsers = this.clientProxyTeam.send(UserMSG.FIND_ALL_EMPLOYEES, findParamsUsers);
+    const { list: hrUsersFound }  = await lastValueFrom(hrUsers);
+
+    const hrEmails: any = [];
+    hrUsersFound.map((user: User) => hrEmails.push(user.email));
+    emailData.hrEmails = hrEmails;
+
+    const email = this.clientProxyEmail.send(UnpluggedMSG.CREATE_REQUEST_COACH_EMAIL, emailData);
     const emailSent = await lastValueFrom(email);
   }
 
